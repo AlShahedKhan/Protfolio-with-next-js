@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Menu, X, Sun, Moon } from 'lucide-react';
+import { Menu, Moon, Sun, X } from 'lucide-react';
 import { portfolioOwner } from '@/lib/portfolio-data';
 
 interface HeaderProps {
@@ -10,89 +10,88 @@ interface HeaderProps {
   setDarkMode: (value: boolean) => void;
 }
 
+const navItems = [
+  { name: 'About', href: '#about' },
+  { name: 'Projects', href: '#projects' },
+  { name: 'Experience', href: '#experience' },
+  { name: 'Contact', href: '#contact' },
+];
+
 export default function Header({ darkMode, setDarkMode }: HeaderProps) {
   const [isOpen, setIsOpen] = useState(false);
-
-  const navItems = [
-    { name: 'About', href: '#about' },
-    { name: 'Projects', href: '#projects' },
-    { name: 'Skills', href: '#skills' },
-    { name: 'Experience', href: '#experience' },
-    { name: 'Blog', href: '#blog' },
-    { name: 'Contact', href: '#contact' },
-  ];
-
   const getInitial = () => portfolioOwner.name.charAt(0).toUpperCase();
 
   return (
-    <header className="sticky top-0 z-50 bg-slate-950/80 backdrop-blur-lg border-b border-slate-800">
+    <header className="sticky top-0 z-50 border-b border-slate-800 bg-slate-950/85 backdrop-blur-xl">
       <div className="container-max">
-        <div className="flex items-center justify-between h-20">
-          {/* Logo */}
-          <Link href="#" className="flex items-center gap-2 group">
-            <div className="w-10 h-10 bg-gradient-to-br from-cyan-400 to-blue-500 rounded-lg flex items-center justify-center font-bold text-slate-950 group-hover:scale-110 transition-transform duration-300">
+        <div className="flex h-20 items-center justify-between gap-4">
+          <Link href="#" className="flex items-center gap-3 group">
+            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-400 to-blue-500 font-bold text-slate-950 transition-transform duration-300 group-hover:scale-105">
               {getInitial()}
             </div>
-            <span className="text-xl font-bold bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent group-hover:opacity-80 transition-opacity duration-300">
-              {portfolioOwner.name.split(' ')[0]}
-            </span>
+            <div>
+              <p className="text-sm font-semibold text-white">{portfolioOwner.name}</p>
+              <p className="text-xs uppercase tracking-[0.22em] text-slate-500">Laravel Portfolio</p>
+            </div>
           </Link>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-8">
+          <nav className="hidden items-center gap-8 md:flex">
             {navItems.map((item) => (
               <a
                 key={item.name}
                 href={item.href}
-                className="text-slate-400 hover:text-cyan-400 transition-colors duration-300 font-medium"
+                className="text-sm font-medium text-slate-400 transition-colors duration-300 hover:text-cyan-300"
               >
                 {item.name}
               </a>
             ))}
           </nav>
 
-          {/* Right Side Actions */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
+            <a
+              href="#contact"
+              className="hidden rounded-full border border-cyan-500/30 bg-cyan-500/10 px-4 py-2 text-sm font-medium text-cyan-300 transition-colors duration-300 hover:bg-cyan-500/20 md:inline-flex"
+            >
+              Let&apos;s Talk
+            </a>
+
             <button
               onClick={() => setDarkMode(!darkMode)}
-              className="p-2 hover:bg-slate-800 rounded-lg transition-colors duration-300"
+              className="rounded-full border border-slate-800 p-2.5 transition-colors duration-300 hover:bg-slate-800"
               aria-label="Toggle dark mode"
             >
-              {darkMode ? (
-                <Sun size={20} className="text-slate-400" />
-              ) : (
-                <Moon size={20} className="text-slate-400" />
-              )}
+              {darkMode ? <Sun size={18} className="text-slate-300" /> : <Moon size={18} className="text-slate-300" />}
             </button>
 
-            {/* Mobile Menu Button */}
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="md:hidden p-2 hover:bg-slate-800 rounded-lg transition-colors duration-300"
+              className="rounded-full border border-slate-800 p-2.5 transition-colors duration-300 hover:bg-slate-800 md:hidden"
               aria-label="Toggle menu"
             >
-              {isOpen ? (
-                <X size={24} className="text-slate-400" />
-              ) : (
-                <Menu size={24} className="text-slate-400" />
-              )}
+              {isOpen ? <X size={20} className="text-slate-300" /> : <Menu size={20} className="text-slate-300" />}
             </button>
           </div>
         </div>
 
-        {/* Mobile Navigation */}
         {isOpen && (
-          <nav className="md:hidden pb-4 space-y-2 border-t border-slate-800 pt-4">
+          <nav className="space-y-2 border-t border-slate-800 pb-4 pt-4 md:hidden">
             {navItems.map((item) => (
               <a
                 key={item.name}
                 href={item.href}
-                className="block px-4 py-2 text-slate-400 hover:text-cyan-400 hover:bg-slate-800 rounded-lg transition-all duration-300"
+                className="block rounded-2xl px-4 py-3 text-slate-300 transition-colors duration-300 hover:bg-slate-900 hover:text-cyan-300"
                 onClick={() => setIsOpen(false)}
               >
                 {item.name}
               </a>
             ))}
+            <a
+              href="#contact"
+              className="mt-2 block rounded-2xl border border-cyan-500/30 bg-cyan-500/10 px-4 py-3 text-center font-medium text-cyan-300"
+              onClick={() => setIsOpen(false)}
+            >
+              Let&apos;s Talk
+            </a>
           </nav>
         )}
       </div>

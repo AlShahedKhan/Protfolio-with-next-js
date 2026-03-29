@@ -2,13 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowLeft, Calendar, Clock } from 'lucide-react';
 import { blogPostsData, portfolioOwner } from '@/lib/portfolio-data';
-
-const formatDate = (dateString: string) =>
-  new Date(dateString).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  });
+import { formatDate } from '@/lib/format-date';
 
 export default function BlogIndexPage() {
   return (

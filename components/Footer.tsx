@@ -1,8 +1,22 @@
 'use client';
 
 import Link from 'next/link';
-import { Github, Linkedin, Twitter, Mail, ArrowUp } from 'lucide-react';
+import { ArrowUp, Github, Linkedin, Mail, Twitter } from 'lucide-react';
 import { portfolioOwner } from '@/lib/portfolio-data';
+
+const quickLinks = [
+  { name: 'About', href: '#about' },
+  { name: 'Projects', href: '#projects' },
+  { name: 'Experience', href: '#experience' },
+  { name: 'Contact', href: '#contact' },
+];
+
+const focusAreas = [
+  'Laravel APIs',
+  'Admin dashboards',
+  'Internal tools',
+  'Product rebuilds',
+];
 
 export default function Footer() {
   const scrollToTop = () => {
@@ -10,13 +24,6 @@ export default function Footer() {
   };
 
   const getInitial = () => portfolioOwner.name.charAt(0).toUpperCase();
-
-  const quickLinks = [
-    { name: 'About', href: '#about' },
-    { name: 'Projects', href: '#projects' },
-    { name: 'Skills', href: '#skills' },
-    { name: 'Experience', href: '#experience' },
-  ];
 
   const socialLinks = [
     { icon: Github, href: portfolioOwner.github, label: 'GitHub' },
@@ -28,32 +35,33 @@ export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-slate-950 border-t border-slate-800">
+    <footer className="border-t border-slate-800 bg-slate-950">
       <div className="container-max py-16">
-        <div className="grid md:grid-cols-4 gap-12 mb-12">
+        <div className="mb-12 grid gap-12 md:grid-cols-4">
           <div className="space-y-4">
-            <Link href="#" className="flex items-center gap-2 group">
-              <div className="w-10 h-10 bg-gradient-to-br from-cyan-400 to-blue-500 rounded-lg flex items-center justify-center font-bold text-slate-950 group-hover:scale-110 transition-transform duration-300">
+            <Link href="#" className="flex items-center gap-3 group">
+              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-400 to-blue-500 font-bold text-slate-950 transition-transform duration-300 group-hover:scale-105">
                 {getInitial()}
               </div>
-              <span className="text-lg font-bold bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent group-hover:opacity-80 transition-opacity duration-300">
-                {portfolioOwner.name.split(' ')[0]}
-              </span>
+              <div>
+                <p className="text-base font-semibold text-white">{portfolioOwner.name}</p>
+                <p className="text-xs uppercase tracking-[0.22em] text-slate-500">Laravel Portfolio</p>
+              </div>
             </Link>
-            <p className="text-slate-400 text-sm leading-relaxed">
-              {portfolioOwner.title} with {portfolioOwner.yearsExperience} years of experience building beautiful, scalable web applications.
+            <p className="text-sm leading-relaxed text-slate-400">
+              {portfolioOwner.title} focused on Laravel backends, dashboards, and clean product delivery.
             </p>
-            <p className="text-slate-500 text-xs">Based in {portfolioOwner.location}</p>
+            <p className="text-xs text-slate-500">Based in {portfolioOwner.location}</p>
           </div>
 
           <div>
-            <h3 className="font-semibold text-white mb-4">Navigation</h3>
+            <h3 className="mb-4 font-semibold text-white">Navigation</h3>
             <ul className="space-y-2">
               {quickLinks.map((link) => (
                 <li key={link.name}>
                   <a
                     href={link.href}
-                    className="text-slate-400 hover:text-cyan-400 transition-colors duration-300 text-sm"
+                    className="text-sm text-slate-400 transition-colors duration-300 hover:text-cyan-300"
                   >
                     {link.name}
                   </a>
@@ -63,28 +71,18 @@ export default function Footer() {
           </div>
 
           <div>
-            <h3 className="font-semibold text-white mb-4">Resources</h3>
+            <h3 className="mb-4 font-semibold text-white">Focus</h3>
             <ul className="space-y-2">
-              {[
-                { name: 'Blog', href: '#blog' },
-                { name: 'Resume', href: '#' },
-                { name: 'Privacy Policy', href: '#' },
-                { name: 'Terms of Service', href: '#' },
-              ].map((link) => (
-                <li key={link.name}>
-                  <a
-                    href={link.href}
-                    className="text-slate-400 hover:text-cyan-400 transition-colors duration-300 text-sm"
-                  >
-                    {link.name}
-                  </a>
+              {focusAreas.map((item) => (
+                <li key={item} className="text-sm text-slate-400">
+                  {item}
                 </li>
               ))}
             </ul>
           </div>
 
           <div>
-            <h3 className="font-semibold text-white mb-4">Connect</h3>
+            <h3 className="mb-4 font-semibold text-white">Connect</h3>
             <div className="flex gap-3">
               {socialLinks.map((social) => {
                 const Icon = social.icon;
@@ -96,10 +94,10 @@ export default function Footer() {
                     href={social.href}
                     target={isExternal ? '_blank' : undefined}
                     rel={isExternal ? 'noopener noreferrer' : undefined}
-                    className="p-2 rounded-lg bg-slate-800/50 hover:bg-cyan-500/20 border border-slate-700 hover:border-cyan-500/50 transition-all duration-300"
+                    className="rounded-xl border border-slate-700 bg-slate-900/70 p-2.5 transition-all duration-300 hover:border-cyan-500/50 hover:bg-cyan-500/10"
                     aria-label={social.label}
                   >
-                    <Icon size={20} className="text-slate-400 hover:text-cyan-400" />
+                    <Icon size={18} className="text-slate-300" />
                   </a>
                 );
               })}
@@ -107,14 +105,15 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-slate-800 py-8 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-slate-400 text-sm">
+        <div className="flex flex-col items-center justify-between gap-4 border-t border-slate-800 py-8 md:flex-row">
+          <p className="text-sm text-slate-400">
             Copyright {currentYear} {portfolioOwner.name}. All rights reserved.
           </p>
 
           <button
             onClick={scrollToTop}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-slate-800/50 hover:bg-cyan-500/20 border border-slate-700 hover:border-cyan-500/50 transition-all duration-300 text-slate-400 hover:text-cyan-400"
+            suppressHydrationWarning
+            className="inline-flex items-center gap-2 rounded-full border border-slate-700 bg-slate-900/70 px-4 py-2 text-sm text-slate-300 transition-all duration-300 hover:border-cyan-500/40 hover:text-cyan-300"
             aria-label="Scroll to top"
           >
             Back to Top

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Plus, Edit2, Trash2, Eye } from 'lucide-react';
 import Link from 'next/link';
+import { formatDate } from '@/lib/format-date';
 
 export default function BlogAdmin() {
   const [posts, setPosts] = useState([
@@ -34,11 +35,6 @@ export default function BlogAdmin() {
 
   const deletePost = (id: number) => {
     setPosts(posts.filter((p) => p.id !== id));
-  };
-
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
   };
 
   return (
@@ -82,7 +78,7 @@ export default function BlogAdmin() {
                     </span>
                   </td>
                   <td className="px-6 py-4">
-                    <p className="text-slate-400 text-sm">{formatDate(post.date)}</p>
+                    <p className="text-slate-400 text-sm">{formatDate(post.date, { year: 'numeric', month: 'short', day: 'numeric', timeZone: 'UTC' })}</p>
                   </td>
                   <td className="px-6 py-4">
                     <span

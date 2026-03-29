@@ -1,78 +1,78 @@
 'use client';
 
-import { Code2, Database, Globe, Zap } from 'lucide-react';
-import { aboutData, portfolioOwner, projectsData, testimonialsData } from '@/lib/portfolio-data';
+import { Code2, Database, Globe } from 'lucide-react';
+
+const strengths = [
+  {
+    icon: Code2,
+    title: 'Readable systems',
+    description: 'I care about codebases that stay understandable after launch, not just during the demo.',
+  },
+  {
+    icon: Database,
+    title: 'Solid backend decisions',
+    description: 'API design, data modeling, and performance choices that keep products dependable as they grow.',
+  },
+  {
+    icon: Globe,
+    title: 'Product-aware execution',
+    description: 'I think about the user flow, the admin experience, and the team maintaining the product next month.',
+  },
+];
+
+const coreStack = ['Laravel', 'PHP', 'React', 'PostgreSQL', 'REST APIs', 'Tailwind CSS', 'MySQL', 'Docker'];
 
 export default function About() {
-  const highlights = [
-    {
-      icon: Code2,
-      title: 'Clean Code',
-      description: 'Writing maintainable, well-structured code following SOLID principles and Laravel best practices',
-    },
-    {
-      icon: Database,
-      title: 'Database Design',
-      description: 'Expert in designing efficient database schemas and optimizing queries for performance',
-    },
-    {
-      icon: Globe,
-      title: 'Full Stack',
-      description: 'Building complete web applications from backend APIs to responsive frontend interfaces',
-    },
-    {
-      icon: Zap,
-      title: 'Performance',
-      description: 'Optimizing applications for speed and scalability with caching and best practices',
-    },
-  ];
-
   return (
-    <section id="about" className="py-20 md:py-32 bg-slate-900/50 relative overflow-hidden">
+    <section id="about" className="relative bg-slate-900/40 py-20 md:py-28">
       <div className="container-max">
-        <div className="grid md:grid-cols-2 gap-12 lg:gap-16 items-center">
-          {/* Left Content */}
+        <div className="grid gap-10 lg:grid-cols-[0.95fr_1.05fr] lg:items-start">
           <div className="space-y-6">
-            <div className="space-y-2">
-              <span className="text-cyan-400 font-semibold text-sm tracking-wide uppercase">About Me</span>
-              <h2 className="section-title">{aboutData.intro}</h2>
-              <p className="section-subtitle">
-                {aboutData.description}
+            <div className="space-y-3">
+              <span className="text-sm font-semibold uppercase tracking-[0.3em] text-cyan-300">About</span>
+              <h2 className="section-title max-w-2xl">
+                A tighter, more practical approach to full-stack Laravel work.
+              </h2>
+            </div>
+
+            <div className="space-y-4 text-lg leading-8 text-slate-300">
+              <p>
+                I focus on building backend-heavy products that still feel polished on the frontend. That usually means Laravel APIs, internal tools, dashboards, and the kind of workflow-heavy interfaces businesses rely on every day.
+              </p>
+              <p>
+                The goal is simple: ship work that is clean enough for the team to trust, fast enough for users to enjoy, and structured enough to keep improving without expensive rewrites.
               </p>
             </div>
 
-            <p className="text-slate-300 leading-relaxed">
-              {"I'm proficient in Laravel, PHP, JavaScript/TypeScript, React, and modern database technologies. I love collaborating with teams, learning new technologies, and pushing myself to build better solutions."}
-            </p>
-
-            <div className="flex gap-6 pt-4">
-              <div className="space-y-2">
-                <div className="text-3xl font-bold text-cyan-400">{projectsData.length}+</div>
-                <p className="text-slate-400">Projects Completed</p>
-              </div>
-              <div className="space-y-2">
-                <div className="text-3xl font-bold text-cyan-400">{testimonialsData.length}+</div>
-                <p className="text-slate-400">Happy Clients</p>
-              </div>
-              <div className="space-y-2">
-                <div className="text-3xl font-bold text-cyan-400">{portfolioOwner.yearsExperience}</div>
-                <p className="text-slate-400">Years Experience</p>
+            <div className="rounded-3xl border border-slate-800 bg-slate-950/60 p-6">
+              <p className="text-sm font-semibold uppercase tracking-[0.25em] text-slate-400">Core Stack</p>
+              <div className="mt-4 flex flex-wrap gap-3">
+                {coreStack.map((item) => (
+                  <span
+                    key={item}
+                    className="rounded-full border border-slate-700 bg-slate-900 px-4 py-2 text-sm text-slate-200"
+                  >
+                    {item}
+                  </span>
+                ))}
               </div>
             </div>
           </div>
 
-          {/* Right - Highlights Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {highlights.map((highlight, index) => {
-              const Icon = highlight.icon;
+          <div className="grid gap-5">
+            {strengths.map((strength) => {
+              const Icon = strength.icon;
+
               return (
                 <div
-                  key={index}
-                  className="glass-effect p-6 card-hover group"
+                  key={strength.title}
+                  className="glass-effect rounded-3xl p-6 transition-all duration-300 hover:border-cyan-500/40"
                 >
-                  <Icon className="w-8 h-8 text-cyan-400 mb-4 group-hover:scale-110 transition-transform duration-300" />
-                  <h3 className="font-semibold text-white mb-2">{highlight.title}</h3>
-                  <p className="text-sm text-slate-400">{highlight.description}</p>
+                  <div className="mb-4 inline-flex rounded-2xl border border-cyan-500/20 bg-cyan-500/10 p-3">
+                    <Icon className="h-6 w-6 text-cyan-300" />
+                  </div>
+                  <h3 className="text-xl font-semibold text-white">{strength.title}</h3>
+                  <p className="mt-3 text-slate-400">{strength.description}</p>
                 </div>
               );
             })}

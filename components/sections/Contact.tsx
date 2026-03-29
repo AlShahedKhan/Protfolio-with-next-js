@@ -1,180 +1,136 @@
 'use client';
 
-import { useState } from 'react';
-import { Mail, MapPin, Phone, Send } from 'lucide-react';
+import { ArrowRight, Github, Linkedin, Mail, MapPin, Phone } from 'lucide-react';
 import { portfolioOwner } from '@/lib/portfolio-data';
 
+const locationQuery = encodeURIComponent(portfolioOwner.location);
+
+const contactItems = [
+  {
+    icon: Mail,
+    label: 'Email',
+    value: portfolioOwner.email,
+    href: `mailto:${portfolioOwner.email}`,
+  },
+  {
+    icon: Phone,
+    label: 'Phone',
+    value: portfolioOwner.phone,
+    href: `tel:${portfolioOwner.phone.replace(/[^+\d]/g, '')}`,
+  },
+  {
+    icon: MapPin,
+    label: 'Location',
+    value: portfolioOwner.location,
+    href: `https://www.google.com/maps/search/?api=1&query=${locationQuery}`,
+  },
+];
+
+const primaryActions = [
+  {
+    icon: Mail,
+    label: 'Send an email',
+    href: `mailto:${portfolioOwner.email}`,
+  },
+  {
+    icon: Linkedin,
+    label: 'Connect on LinkedIn',
+    href: portfolioOwner.linkedin,
+  },
+  {
+    icon: Github,
+    label: 'View GitHub',
+    href: portfolioOwner.github,
+  },
+].filter((item) => Boolean(item.href));
+
 export default function Contact() {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    subject: '',
-    message: '',
-  });
-  const [submitted, setSubmitted] = useState(false);
-  const locationQuery = encodeURIComponent(portfolioOwner.location);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log('Form submitted:', formData);
-    setSubmitted(true);
-    setTimeout(() => {
-      setFormData({ name: '', email: '', subject: '', message: '' });
-      setSubmitted(false);
-    }, 3000);
-  };
-
-  const contactInfo = [
-    {
-      icon: Mail,
-      label: 'Email',
-      value: portfolioOwner.email,
-      link: `mailto:${portfolioOwner.email}`,
-    },
-    {
-      icon: Phone,
-      label: 'Phone',
-      value: portfolioOwner.phone,
-      link: `tel:${portfolioOwner.phone.replace(/[^+\d]/g, '')}`,
-    },
-    {
-      icon: MapPin,
-      label: 'Location',
-      value: portfolioOwner.location,
-      link: `https://www.google.com/maps/search/?api=1&query=${locationQuery}`,
-    },
-  ];
-
   return (
-    <section id="contact" className="py-20 md:py-32 bg-slate-900/50 relative overflow-hidden">
+    <section id="contact" className="relative py-20 md:py-28">
       <div className="container-max">
-        <div className="space-y-2 mb-16">
-          <span className="text-cyan-400 font-semibold text-sm tracking-wide uppercase">Get in Touch</span>
-          <h2 className="section-title">{"Let's Work Together"}</h2>
-          <p className="section-subtitle">
-            {"Have a project in mind? I'd love to hear from you. Send me a message and I'll get back to you as soon as possible."}
-          </p>
-        </div>
-
-        <div className="grid md:grid-cols-3 gap-6 mb-12">
-          {contactInfo.map((info, index) => {
-            const Icon = info.icon;
-            return (
-              <a
-                key={index}
-                href={info.link}
-                className="glass-effect p-6 card-hover group"
-              >
-                <Icon className="w-8 h-8 text-cyan-400 mb-4 group-hover:scale-110 transition-transform duration-300" />
-                <h3 className="font-semibold text-white mb-2">{info.label}</h3>
-                <p className="text-slate-400 group-hover:text-cyan-400 transition-colors duration-300">
-                  {info.value}
-                </p>
-              </a>
-            );
-          })}
-        </div>
-
-        {/* Contact Form */}
-        <div className="max-w-2xl mx-auto glass-effect p-8 md:p-12">
-          {submitted ? (
-            <div className="text-center space-y-4 py-8">
-              <div className="w-16 h-16 mx-auto rounded-full bg-green-500/20 flex items-center justify-center">
-                <svg className="w-8 h-8 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-bold text-white">Message Sent!</h3>
-              <p className="text-slate-400">{"Thanks for reaching out. I'll get back to you soon."}</p>
+        <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
+          <div className="space-y-6">
+            <div className="space-y-3">
+              <span className="text-sm font-semibold uppercase tracking-[0.3em] text-cyan-300">Contact</span>
+              <h2 className="section-title">If the work needs to be clean, useful, and maintainable, let&apos;s talk.</h2>
+              <p className="max-w-2xl text-lg leading-8 text-slate-300">
+                I&apos;d rather make it easy to reach me than hide behind a fake contact form. If you have a Laravel product, internal tool, dashboard, or API-heavy build in mind, send a message directly.
+              </p>
             </div>
-          ) : (
-            <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Name */}
+
+            <div className="flex flex-col gap-4 sm:flex-row sm:flex-wrap">
+              {primaryActions.map((action) => {
+                const Icon = action.icon;
+                const isExternal = !action.href.startsWith('mailto:');
+
+                return (
+                  <a
+                    key={action.label}
+                    href={action.href}
+                    target={isExternal ? '_blank' : undefined}
+                    rel={isExternal ? 'noopener noreferrer' : undefined}
+                    className="inline-flex items-center justify-center gap-2 rounded-full border border-slate-700 bg-slate-900/70 px-5 py-3 font-medium text-white transition-all duration-300 hover:border-cyan-500/40 hover:bg-cyan-500/10"
+                  >
+                    <Icon size={18} />
+                    {action.label}
+                    <ArrowRight size={16} />
+                  </a>
+                );
+              })}
+            </div>
+
+            <div className="rounded-3xl border border-slate-800 bg-slate-900/60 p-6">
+              <p className="text-sm font-semibold uppercase tracking-[0.25em] text-slate-400">Best fit projects</p>
+              <div className="mt-4 flex flex-wrap gap-3">
+                {['Laravel backends', 'Dashboards', 'Internal tools', 'API integrations', 'Product rebuilds'].map((item) => (
+                  <span
+                    key={item}
+                    className="rounded-full border border-slate-700 bg-slate-950 px-4 py-2 text-sm text-slate-200"
+                  >
+                    {item}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="glass-effect rounded-[2rem] p-8">
+            <div className="space-y-6">
               <div>
-                <label htmlFor="name" className="block text-sm font-medium text-slate-300 mb-2">
-                  Full Name
-                </label>
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  required
-                  className="w-full px-4 py-3 rounded-lg bg-slate-800/50 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all duration-300"
-                  placeholder="John Doe"
-                />
+                <p className="text-sm font-semibold uppercase tracking-[0.25em] text-cyan-300">Reach out directly</p>
+                <h3 className="mt-3 text-2xl font-semibold text-white">Simple contact details, no dead-end form.</h3>
               </div>
 
-              {/* Email */}
-              <div>
-                <label htmlFor="email" className="block text-sm font-medium text-slate-300 mb-2">
-                  Email Address
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  required
-                  className="w-full px-4 py-3 rounded-lg bg-slate-800/50 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all duration-300"
-                  placeholder="john@example.com"
-                />
+              <div className="space-y-4">
+                {contactItems.map((item) => {
+                  const Icon = item.icon;
+                  const isExternal = !item.href.startsWith('mailto:') && !item.href.startsWith('tel:');
+
+                  return (
+                    <a
+                      key={item.label}
+                      href={item.href}
+                      target={isExternal ? '_blank' : undefined}
+                      rel={isExternal ? 'noopener noreferrer' : undefined}
+                      className="flex items-start gap-4 rounded-2xl border border-slate-800 bg-slate-950/60 p-5 transition-all duration-300 hover:border-cyan-500/40"
+                    >
+                      <div className="rounded-2xl border border-cyan-500/20 bg-cyan-500/10 p-3">
+                        <Icon className="h-5 w-5 text-cyan-300" />
+                      </div>
+                      <div>
+                        <p className="text-sm uppercase tracking-[0.18em] text-slate-500">{item.label}</p>
+                        <p className="mt-2 text-base font-medium text-white">{item.value}</p>
+                      </div>
+                    </a>
+                  );
+                })}
               </div>
 
-              {/* Subject */}
-              <div>
-                <label htmlFor="subject" className="block text-sm font-medium text-slate-300 mb-2">
-                  Subject
-                </label>
-                <input
-                  type="text"
-                  id="subject"
-                  name="subject"
-                  value={formData.subject}
-                  onChange={handleChange}
-                  required
-                  className="w-full px-4 py-3 rounded-lg bg-slate-800/50 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all duration-300"
-                  placeholder="Project Discussion"
-                />
+              <div className="rounded-2xl border border-slate-800 bg-slate-950/60 p-5 text-sm text-slate-400">
+                Prefer email for project inquiries and LinkedIn for quick introductions. Once your real details are added to the data file, this section will be ready to go.
               </div>
-
-              {/* Message */}
-              <div>
-                <label htmlFor="message" className="block text-sm font-medium text-slate-300 mb-2">
-                  Message
-                </label>
-                <textarea
-                  id="message"
-                  name="message"
-                  value={formData.message}
-                  onChange={handleChange}
-                  required
-                  rows={5}
-                  className="w-full px-4 py-3 rounded-lg bg-slate-800/50 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all duration-300 resize-none"
-                  placeholder="Tell me about your project..."
-                ></textarea>
-              </div>
-
-              {/* Submit Button */}
-              <button
-                type="submit"
-                className="w-full btn-primary flex items-center justify-center gap-2 group"
-              >
-                <Send size={20} />
-                Send Message
-              </button>
-            </form>
-          )}
+            </div>
+          </div>
         </div>
       </div>
     </section>

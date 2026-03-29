@@ -4,19 +4,13 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ArrowLeft, Calendar, Clock } from 'lucide-react';
 import { blogPostsData, portfolioOwner } from '@/lib/portfolio-data';
+import { formatDate } from '@/lib/format-date';
 
 type BlogPostPageProps = {
   params: Promise<{
     slug: string;
   }>;
 };
-
-const formatDate = (dateString: string) =>
-  new Date(dateString).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  });
 
 const getPostBySlug = (slug: string) => blogPostsData.find((post) => post.slug === slug);
 

@@ -2,93 +2,104 @@
 
 import { ExternalLink, Github } from 'lucide-react';
 import Image from 'next/image';
-import Link from 'next/link';
 import { projectsData } from '@/lib/portfolio-data';
 
+const isRealProjectLink = (link?: string) =>
+  Boolean(link && !link.includes('example.com') && link !== 'https://github.com');
+
 export default function Projects() {
-  const featuredProjects = projectsData.filter(p => p.featured);
+  const selectedProjects = projectsData.filter((project) => project.featured).slice(0, 3);
 
   return (
-    <section id="projects" className="py-20 md:py-32 relative overflow-hidden">
+    <section id="projects" className="relative py-20 md:py-28">
       <div className="container-max">
-        <div className="space-y-2 mb-16">
-          <span className="text-cyan-400 font-semibold text-sm tracking-wide uppercase">Portfolio</span>
-          <h2 className="section-title">Featured Projects</h2>
-          <p className="section-subtitle">
-            A selection of recent projects showcasing my skills and expertise
+        <div className="mb-14 flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
+          <div className="space-y-3">
+            <span className="text-sm font-semibold uppercase tracking-[0.3em] text-cyan-300">Selected Work</span>
+            <h2 className="section-title">Three projects that show the kind of problems I like solving.</h2>
+          </div>
+          <p className="max-w-xl text-slate-400">
+            I would rather show fewer projects with clearer thinking than a long wall of cards. These are the kinds of Laravel and product builds I want this portfolio to represent.
           </p>
         </div>
 
-        {/* Projects Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {featuredProjects.map((project) => (
-            <div key={project.id} className="group glass-effect overflow-hidden card-hover h-full flex flex-col animate-fade-in">
-              {/* Image */}
-              <div className="h-48 overflow-hidden relative">
-                <Image
-                  src={project.image}
-                  alt={project.title}
-                  fill
-                  sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-              </div>
+        <div className="grid gap-8 lg:grid-cols-3">
+          {selectedProjects.map((project, index) => {
+            const showLiveLink = isRealProjectLink(project.link);
+            const showCodeLink = isRealProjectLink(project.github);
 
-              {/* Content */}
-              <div className="p-6 flex flex-col flex-grow">
-                <h3 className="text-xl font-bold text-white mb-3 group-hover:text-cyan-400 transition-colors duration-300">
-                  {project.title}
-                </h3>
-                <p className="text-slate-400 text-sm mb-4 flex-grow">{project.description}</p>
-
-                {/* Tags */}
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {project.technologies.map((tech) => (
-                    <span
-                      key={tech}
-                      className="px-3 py-1 text-xs rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20"
-                    >
-                      {tech}
-                    </span>
-                  ))}
+            return (
+              <article
+                key={project.id}
+                className="group overflow-hidden rounded-[2rem] border border-slate-800 bg-slate-900/70 shadow-[0_30px_80px_rgba(2,6,23,0.28)] transition-all duration-300 hover:-translate-y-1 hover:border-cyan-500/40"
+              >
+                <div className="relative h-56 overflow-hidden">
+                  <Image
+                    src={project.image}
+                    alt={project.title}
+                    fill
+                    sizes="(min-width: 1024px) 33vw, 100vw"
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/10 to-transparent" />
+                  <div className="absolute left-5 top-5 rounded-full border border-cyan-400/20 bg-slate-950/75 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-cyan-300">
+                    0{index + 1}
+                  </div>
                 </div>
 
-                {/* Links */}
-                <div className="flex gap-3 pt-4 border-t border-slate-700">
-                  {project.link && (
-                    <a
-                      href={project.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex-1 flex items-center justify-center gap-2 py-2 rounded-lg hover:bg-cyan-500/10 transition-colors duration-300 text-sm font-medium text-cyan-400"
-                    >
-                      <ExternalLink size={16} />
-                      Live Demo
-                    </a>
-                  )}
-                  {project.github && (
-                    <a
-                      href={project.github}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex-1 flex items-center justify-center gap-2 py-2 rounded-lg hover:bg-cyan-500/10 transition-colors duration-300 text-sm font-medium text-cyan-400"
-                    >
-                      <Github size={16} />
-                      Code
-                    </a>
-                  )}
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
+                <div className="space-y-5 p-6">
+                  <div className="space-y-3">
+                    <h3 className="text-2xl font-semibold text-white">{project.title}</h3>
+                    <p className="text-slate-400">{project.description}</p>
+                  </div>
 
-        {/* View All Button */}
-        <div className="flex justify-center pt-12">
-          <Link href="#" className="btn-primary">
-            View All Projects
-          </Link>
+                  <div className="flex flex-wrap gap-2">
+                    {project.technologies.map((tech) => (
+                      <span
+                        key={tech}
+                        className="rounded-full border border-slate-700 bg-slate-950/70 px-3 py-1 text-xs font-medium text-slate-300"
+                      >
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+
+                  <div className="border-t border-slate-800 pt-4">
+                    {showLiveLink || showCodeLink ? (
+                      <div className="flex gap-3">
+                        {showLiveLink && (
+                          <a
+                            href={project.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-2 rounded-full border border-cyan-500/30 bg-cyan-500/10 px-4 py-2 text-sm font-medium text-cyan-300 transition-colors duration-300 hover:bg-cyan-500/20"
+                          >
+                            <ExternalLink size={16} />
+                            Live Demo
+                          </a>
+                        )}
+                        {showCodeLink && (
+                          <a
+                            href={project.github}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-2 rounded-full border border-slate-700 bg-slate-950/70 px-4 py-2 text-sm font-medium text-slate-200 transition-colors duration-300 hover:border-cyan-500/30 hover:text-cyan-300"
+                          >
+                            <Github size={16} />
+                            Code
+                          </a>
+                        )}
+                      </div>
+                    ) : (
+                      <p className="text-sm text-slate-500">
+                        Case study links can be added here once the real project details are ready.
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </article>
+            );
+          })}
         </div>
       </div>
     </section>

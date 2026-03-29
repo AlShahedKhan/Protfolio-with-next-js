@@ -5,61 +5,67 @@ import { experienceData } from '@/lib/portfolio-data';
 
 export default function Experience() {
   return (
-    <section id="experience" className="py-20 md:py-32 relative overflow-hidden">
+    <section id="experience" className="relative bg-slate-900/40 py-20 md:py-28">
       <div className="container-max">
-        <div className="space-y-2 mb-16">
-          <span className="text-cyan-400 font-semibold text-sm tracking-wide uppercase">Career Path</span>
-          <h2 className="section-title">Professional Experience</h2>
-          <p className="section-subtitle">
-            2 years of progressive growth and impactful contributions
+        <div className="mb-14 flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
+          <div className="space-y-3">
+            <span className="text-sm font-semibold uppercase tracking-[0.3em] text-cyan-300">Experience</span>
+            <h2 className="section-title">Recent roles focused on product delivery and backend reliability.</h2>
+          </div>
+          <p className="max-w-xl text-slate-400">
+            The common thread across these roles is building software that teams can ship, support, and improve without unnecessary complexity.
           </p>
         </div>
 
-        {/* Timeline */}
-        <div className="space-y-6 max-w-4xl mx-auto">
+        <div className="mx-auto max-w-5xl space-y-6">
           {experienceData.map((exp) => (
-            <div key={exp.id} className="glass-effect p-6 md:p-8 card-hover group animate-fade-in">
-              <div className="flex flex-col md:flex-row md:items-start md:justify-between mb-4">
-                <div className="flex items-start gap-4 mb-4 md:mb-0">
-                  <div className="p-3 rounded-lg bg-cyan-500/10 border border-cyan-500/20 group-hover:border-cyan-500/50 transition-colors duration-300">
-                    <Briefcase className="w-6 h-6 text-cyan-400" />
+            <article
+              key={exp.id}
+              className="glass-effect rounded-[2rem] p-6 md:p-8 transition-all duration-300 hover:border-cyan-500/40"
+            >
+              <div className="flex flex-col gap-6 md:flex-row md:justify-between">
+                <div className="space-y-4">
+                  <div className="flex items-start gap-4">
+                    <div className="rounded-2xl border border-cyan-500/20 bg-cyan-500/10 p-3">
+                      <Briefcase className="h-6 w-6 text-cyan-300" />
+                    </div>
+                    <div>
+                      <h3 className="text-2xl font-semibold text-white">{exp.position}</h3>
+                      <p className="mt-1 text-base font-medium text-cyan-300">{exp.company}</p>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="text-xl font-bold text-white group-hover:text-cyan-400 transition-colors duration-300">
-                      {exp.position}
-                    </h3>
-                    <p className="text-cyan-400 font-medium">{exp.company}</p>
+
+                  <p className="max-w-2xl text-slate-400">{exp.description}</p>
+
+                  <div className="flex flex-wrap gap-2">
+                    {exp.technologies.map((tech) => (
+                      <span
+                        key={tech}
+                        className="rounded-full border border-slate-700 bg-slate-950/70 px-3 py-1 text-xs font-medium text-slate-300"
+                      >
+                        {tech}
+                      </span>
+                    ))}
                   </div>
                 </div>
-                <div className="flex items-center gap-2 text-slate-400 text-sm">
-                  <Calendar size={16} />
-                  <span>{exp.startDate} {exp.endDate ? `- ${exp.endDate}` : '- Present'}</span>
+
+                <div className="md:min-w-[13rem]">
+                  <div className="rounded-2xl border border-slate-800 bg-slate-950/60 p-4">
+                    <div className="flex items-center gap-2 text-sm text-slate-400">
+                      <Calendar size={16} />
+                      <span>
+                        {exp.startDate} {exp.endDate ? `- ${exp.endDate}` : '- Present'}
+                      </span>
+                    </div>
+                    {exp.current && (
+                      <span className="mt-4 inline-flex rounded-full border border-cyan-500/30 bg-cyan-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-cyan-300">
+                        Current Role
+                      </span>
+                    )}
+                  </div>
                 </div>
               </div>
-
-              <p className="text-slate-400 mb-4">{exp.description}</p>
-
-              {/* Status Badge */}
-              {exp.current && (
-                <div className="mb-4">
-                  <span className="inline-block px-3 py-1 rounded-full bg-cyan-500/20 text-cyan-400 text-xs font-medium border border-cyan-500/30">
-                    Current Position
-                  </span>
-                </div>
-              )}
-
-              {/* Technologies */}
-              <div className="flex flex-wrap gap-2 mb-4">
-                {exp.technologies.map((tech) => (
-                  <span
-                    key={tech}
-                    className="px-3 py-1 text-xs rounded-full bg-slate-700/50 text-slate-300 border border-slate-600/50"
-                  >
-                    {tech}
-                  </span>
-                ))}
-              </div>
-            </div>
+            </article>
           ))}
         </div>
       </div>

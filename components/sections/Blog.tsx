@@ -4,18 +4,9 @@ import { Calendar, ArrowRight } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { blogPostsData } from '@/lib/portfolio-data';
+import { formatDate } from '@/lib/format-date';
 
 export default function Blog() {
-
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    });
-  };
-
   return (
     <section id="blog" className="py-20 md:py-32 relative overflow-hidden">
       <div className="container-max">
