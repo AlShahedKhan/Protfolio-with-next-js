@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-
+// 
 const mockBlogPosts = [
   {
     id: 1,

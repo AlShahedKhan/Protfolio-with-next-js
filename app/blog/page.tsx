@@ -25,7 +25,7 @@ export default function BlogIndexPage() {
           <div className="max-w-2xl mb-12 space-y-4">
             <h2 className="text-4xl font-bold tracking-tight">Writing about Laravel, architecture, and product work</h2>
             <p className="text-slate-400 text-lg">
-              These starter articles are wired up as real routes now, so you can replace the sample content with your own posts or swap the page over to your Laravel API later.
+              Notes and lessons drawn from real Laravel delivery work across APIs, scaling, payments, and platform architecture.
             </p>
           </div>
 

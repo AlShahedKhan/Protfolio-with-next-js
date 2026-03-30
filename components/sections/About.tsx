@@ -1,26 +1,27 @@
 'use client';
 
 import { Code2, Database, Globe } from 'lucide-react';
+import { aboutData } from '@/lib/portfolio-data';
 
 const strengths = [
   {
     icon: Code2,
-    title: 'Readable systems',
-    description: 'I care about codebases that stay understandable after launch, not just during the demo.',
+    title: 'Architecture that scales',
+    description: 'I build Laravel applications with clean structure so new features do not create long-term maintenance pain.',
   },
   {
     icon: Database,
-    title: 'Solid backend decisions',
-    description: 'API design, data modeling, and performance choices that keep products dependable as they grow.',
+    title: 'Backend performance thinking',
+    description: 'Database design, Redis caching, and API structure are handled with production reliability in mind.',
   },
   {
     icon: Globe,
-    title: 'Product-aware execution',
-    description: 'I think about the user flow, the admin experience, and the team maintaining the product next month.',
+    title: 'Global delivery mindset',
+    description: 'I have shipped work for clients across multiple countries with a focus on communication, ownership, and dependable delivery.',
   },
 ];
 
-const coreStack = ['Laravel', 'PHP', 'React', 'PostgreSQL', 'REST APIs', 'Tailwind CSS', 'MySQL', 'Docker'];
+const coreStack = ['Laravel', 'PHP', 'MySQL', 'PostgreSQL', 'Redis', 'Docker', 'AWS', 'Stripe', 'PayPal', 'React', 'Vue.js', 'GitHub Actions'];
 
 export default function About() {
   return (
@@ -31,16 +32,16 @@ export default function About() {
             <div className="space-y-3">
               <span className="text-sm font-semibold uppercase tracking-[0.3em] text-cyan-300">About</span>
               <h2 className="section-title max-w-2xl">
-                A tighter, more practical approach to full-stack Laravel work.
+                {aboutData.intro}
               </h2>
             </div>
 
             <div className="space-y-4 text-lg leading-8 text-slate-300">
               <p>
-                I focus on building backend-heavy products that still feel polished on the frontend. That usually means Laravel APIs, internal tools, dashboards, and the kind of workflow-heavy interfaces businesses rely on every day.
+                {aboutData.description}
               </p>
               <p>
-                The goal is simple: ship work that is clean enough for the team to trust, fast enough for users to enjoy, and structured enough to keep improving without expensive rewrites.
+                My background covers AI chatbot platforms, online education systems, SaaS workflows, real-time communication features, and internal business applications. I care about business outcomes as much as the code itself.
               </p>
             </div>
 
@@ -55,6 +56,18 @@ export default function About() {
                     {item}
                   </span>
                 ))}
+              </div>
+              <div className="mt-5 border-t border-slate-800 pt-5">
+                <div className="flex flex-wrap gap-3">
+                  {aboutData.highlights.slice(0, 3).map((item) => (
+                    <span
+                      key={item}
+                      className="rounded-full border border-cyan-500/20 bg-cyan-500/10 px-4 py-2 text-sm text-cyan-200"
+                    >
+                      {item}
+                    </span>
+                  ))}
+                </div>
               </div>
             </div>
           </div>

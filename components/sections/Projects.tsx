@@ -92,7 +92,7 @@ export default function Projects() {
                       </div>
                     ) : (
                       <p className="text-sm text-slate-500">
-                        Case study links can be added here once the real project details are ready.
+                        Detailed case studies and private work samples can be shared on request for client projects.
                       </p>
                     )}
                   </div>

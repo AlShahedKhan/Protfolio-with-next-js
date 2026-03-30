@@ -54,7 +54,7 @@ export default function Contact() {
               <span className="text-sm font-semibold uppercase tracking-[0.3em] text-cyan-300">Contact</span>
               <h2 className="section-title">If the work needs to be clean, useful, and maintainable, let&apos;s talk.</h2>
               <p className="max-w-2xl text-lg leading-8 text-slate-300">
-                I&apos;d rather make it easy to reach me than hide behind a fake contact form. If you have a Laravel product, internal tool, dashboard, or API-heavy build in mind, send a message directly.
+                If you have a Laravel product, admin system, AI platform, university workflow, or payment-heavy application in mind, send a message directly. I usually reply within a few hours.
               </p>
             </div>
 
@@ -82,7 +82,7 @@ export default function Contact() {
             <div className="rounded-3xl border border-slate-800 bg-slate-900/60 p-6">
               <p className="text-sm font-semibold uppercase tracking-[0.25em] text-slate-400">Best fit projects</p>
               <div className="mt-4 flex flex-wrap gap-3">
-                {['Laravel backends', 'Dashboards', 'Internal tools', 'API integrations', 'Product rebuilds'].map((item) => (
+                {['Laravel backends', 'AI platforms', 'Education systems', 'Payment integrations', 'Internal tools'].map((item) => (
                   <span
                     key={item}
                     className="rounded-full border border-slate-700 bg-slate-950 px-4 py-2 text-sm text-slate-200"
@@ -127,7 +127,7 @@ export default function Contact() {
               </div>
 
               <div className="rounded-2xl border border-slate-800 bg-slate-950/60 p-5 text-sm text-slate-400">
-                Prefer email for project inquiries and LinkedIn for quick introductions. Once your real details are added to the data file, this section will be ready to go.
+                Prefer email for project inquiries. I&apos;m comfortable working with international clients and collaborating in English, Bengali, Hindi, and Urdu.
               </div>
             </div>
           </div>

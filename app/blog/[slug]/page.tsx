@@ -46,7 +46,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
   const articleBody =
     post.content === 'Full blog post content here...'
-      ? `${post.excerpt} This starter currently ships with summary-only content, so this page is the place to drop in your full article body or hydrate it from your backend API.`
+      ? `${post.excerpt} This article route is ready for deeper long-form writing whenever you want to expand the content further.`
       : post.content;
 
   return (
@@ -108,8 +108,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               <div className="prose prose-invert max-w-none">
                 <p>{articleBody}</p>
                 <p>
-                  Replace this sample copy with your full article body, or connect the route to your Laravel backend and fetch the
-                  real post content by slug.
+                  These notes are meant to reflect practical Laravel experience from production work, especially around APIs, performance, and platform delivery.
                 </p>
               </div>
             </div>

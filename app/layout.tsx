@@ -6,27 +6,31 @@ import './globals.css'
 
 const _geist = Geist({ subsets: ["latin"], variable: '--font-geist' });
 const _geistMono = Geist_Mono({ subsets: ["latin"], variable: '--font-geist-mono' });
-const siteUrl = portfolioOwner.siteUrl;
+const siteUrl = portfolioOwner.siteUrl || undefined;
 
 export const metadata: Metadata = {
   title: `${portfolioOwner.name} | ${portfolioOwner.title}`,
-  description: `${portfolioOwner.title} showcasing ${portfolioOwner.yearsExperience} years of experience building full-stack web applications.`,
-  keywords: ['Laravel', 'PHP', 'Web Development', 'Full Stack', 'Backend Development'],
+  description: `${portfolioOwner.title} from ${portfolioOwner.location} with ${portfolioOwner.yearsExperience}+ years of professional experience building Laravel APIs, SaaS platforms, and scalable web applications.`,
+  keywords: ['Laravel', 'PHP', 'Backend Architect', 'REST APIs', 'Redis', 'Docker', 'AWS', 'Stripe', 'PayPal', 'SaaS Development'],
   authors: [{ name: portfolioOwner.name }],
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: siteUrl,
     title: `${portfolioOwner.name} Portfolio`,
-    description: `${portfolioOwner.title} with ${portfolioOwner.yearsExperience} years of professional experience.`,
-    images: [
-      {
-        url: `${siteUrl}/og-image.png`,
-        width: 1200,
-        height: 630,
-        alt: `${portfolioOwner.name} portfolio preview`,
-      },
-    ],
+    description: `${portfolioOwner.title} with ${portfolioOwner.yearsExperience}+ years of professional experience.`,
+    ...(siteUrl
+      ? {
+          url: siteUrl,
+          images: [
+            {
+              url: `${siteUrl}/og-image.png`,
+              width: 1200,
+              height: 630,
+              alt: `${portfolioOwner.name} portfolio preview`,
+            },
+          ],
+        }
+      : {}),
   },
   icons: {
     icon: [
@@ -54,7 +58,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${_geist.variable} ${_geistMono.variable} font-sans antialiased`}>
+      <body suppressHydrationWarning className={`${_geist.variable} ${_geistMono.variable} font-sans antialiased`}>
         {children}
         <Analytics />
       </body>

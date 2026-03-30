@@ -5,15 +5,15 @@ import { ArrowRight, Github, Linkedin, Mail } from 'lucide-react';
 import { portfolioOwner } from '@/lib/portfolio-data';
 
 const proofItems = [
-  { value: 'Laravel', label: 'Backend focus' },
-  { value: 'React', label: 'Frontend delivery' },
-  { value: 'API-first', label: 'Product thinking' },
+  { value: `${portfolioOwner.yearsExperience}+ Years`, label: 'Professional Laravel work' },
+  { value: '30+ Projects', label: 'Production delivery' },
+  { value: '100% JSS', label: 'Upwork proof' },
 ];
 
 const focusAreas = [
-  'Laravel APIs and internal tools',
-  'Dashboards that teams actually enjoy using',
-  'Clean delivery with maintainable code',
+  'Scalable Laravel APIs for SaaS and enterprise products',
+  'AI, education, fintech, and workflow-heavy platforms',
+  'Redis, payments, deployment, and clean delivery ownership',
 ];
 
 export default function Hero() {
@@ -30,7 +30,7 @@ export default function Hero() {
           <div className="space-y-8">
             <div className="inline-flex items-center gap-2 rounded-full border border-cyan-500/30 bg-cyan-500/10 px-4 py-2 text-sm font-medium text-cyan-300 backdrop-blur-sm">
               <span className="size-2 rounded-full bg-cyan-400" />
-              Open for Laravel and product work
+              Dhaka-based and open to remote Laravel work
             </div>
 
             <div className="space-y-5">
@@ -40,11 +40,11 @@ export default function Hero() {
               <h1 className="max-w-4xl text-5xl font-bold tracking-tight text-white md:text-7xl">
                 {portfolioOwner.title}
                 <span className="block bg-gradient-to-r from-cyan-300 via-cyan-400 to-blue-500 bg-clip-text text-transparent">
-                  built for clarity, speed, and growth.
+                  building scalable systems for global clients.
                 </span>
               </h1>
               <p className="max-w-2xl text-lg leading-8 text-slate-300 md:text-xl">
-                I design Laravel backends, admin dashboards, and full-stack workflows that help teams ship cleanly and keep scaling without turning the codebase into a mess.
+                I help startups and growing teams ship secure Laravel backends, production-ready APIs, payment workflows, and full-stack features that stay fast, maintainable, and reliable under real use.
               </p>
             </div>
 
@@ -127,7 +127,7 @@ export default function Hero() {
                 <p className="text-sm uppercase tracking-[0.25em] text-slate-400">Based in</p>
                 <p className="mt-2 text-lg font-semibold text-white">{portfolioOwner.location}</p>
                 <p className="mt-3 text-sm text-slate-400">
-                  Best fit for teams that need clear communication, dependable delivery, and a product mindset instead of just ticket output.
+                  Best fit for teams that need a senior Laravel engineer who can code, ship, optimize, and communicate clearly with clients and product teams.
                 </p>
               </div>
             </div>
