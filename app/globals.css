@@ -120,7 +120,7 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground transition-colors duration-300;
   }
   
   html {
@@ -203,7 +203,7 @@
   }
 
   .glass-effect {
-    @apply bg-slate-900/50 backdrop-blur-xl border border-slate-700/50 rounded-2xl;
+    @apply rounded-2xl border border-slate-200/80 bg-white/72 backdrop-blur-xl dark:border-slate-700/50 dark:bg-slate-900/50;
   }
 
   .smooth-transition {
@@ -215,15 +215,15 @@
   }
 
   .btn-secondary {
-    @apply px-6 py-3 rounded-lg border border-slate-700 hover:bg-slate-800 text-white font-semibold transition-all duration-300 ease-in-out;
+    @apply px-6 py-3 rounded-lg border border-slate-300 hover:bg-slate-100 text-slate-900 font-semibold transition-all duration-300 ease-in-out dark:border-slate-700 dark:hover:bg-slate-800 dark:text-white;
   }
 
   .section-title {
-    @apply text-4xl md:text-5xl font-bold text-balance text-white mb-4;
+    @apply text-4xl md:text-5xl font-bold text-balance text-slate-950 mb-4 dark:text-white;
   }
 
   .section-subtitle {
-    @apply text-lg text-slate-400 text-balance mb-8;
+    @apply text-lg text-slate-600 text-balance mb-8 dark:text-slate-400;
   }
 
   /* Animation Utilities */

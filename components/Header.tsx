@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { Menu, X } from 'lucide-react';
+import ThemeToggle from '@/components/ThemeToggle';
 import { getPortfolioOwner } from '@/lib/content';
 
 const navItems = [
@@ -19,7 +20,7 @@ export default function Header() {
   const getInitial = () => portfolioOwner.name.charAt(0).toUpperCase();
 
   return (
-    <header className="sticky top-0 z-50 border-b border-slate-800 bg-slate-950/85 backdrop-blur-xl">
+    <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/85 backdrop-blur-xl dark:border-slate-800 dark:bg-slate-950/85">
       <div className="container-max">
         <div className="flex h-20 items-center justify-between gap-4">
           <Link href="/" className="flex items-center gap-3 group">
@@ -27,7 +28,7 @@ export default function Header() {
               {getInitial()}
             </div>
             <div>
-              <p className="text-sm font-semibold text-white">{portfolioOwner.name}</p>
+              <p className="text-sm font-semibold text-slate-950 dark:text-white">{portfolioOwner.name}</p>
               <p className="text-xs uppercase tracking-[0.22em] text-slate-500">Laravel Portfolio</p>
             </div>
           </Link>
@@ -37,7 +38,7 @@ export default function Header() {
               <a
                 key={item.name}
                 href={item.href}
-                className="text-sm font-medium text-slate-400 transition-colors duration-300 hover:text-cyan-300"
+                className="text-sm font-medium text-slate-600 transition-colors duration-300 hover:text-cyan-600 dark:text-slate-400 dark:hover:text-cyan-300"
               >
                 {item.name}
               </a>
@@ -47,28 +48,30 @@ export default function Header() {
           <div className="flex items-center gap-3">
             <a
               href="#contact"
-              className="hidden rounded-full border border-cyan-500/30 bg-cyan-500/10 px-4 py-2 text-sm font-medium text-cyan-300 transition-colors duration-300 hover:bg-cyan-500/20 md:inline-flex"
+              className="hidden rounded-full border border-cyan-500/30 bg-cyan-500/10 px-4 py-2 text-sm font-medium text-cyan-700 transition-colors duration-300 hover:bg-cyan-500/20 dark:text-cyan-300 md:inline-flex"
             >
               Let&apos;s Talk
             </a>
 
+            <ThemeToggle />
+
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="rounded-full border border-slate-800 p-2.5 transition-colors duration-300 hover:bg-slate-800 md:hidden"
+              className="rounded-full border border-slate-200 p-2.5 text-slate-700 transition-colors duration-300 hover:bg-slate-100 dark:border-slate-800 dark:text-slate-300 dark:hover:bg-slate-800 md:hidden"
               aria-label="Toggle menu"
             >
-              {isOpen ? <X size={20} className="text-slate-300" /> : <Menu size={20} className="text-slate-300" />}
+              {isOpen ? <X size={20} /> : <Menu size={20} />}
             </button>
           </div>
         </div>
 
         {isOpen && (
-          <nav className="space-y-2 border-t border-slate-800 pb-4 pt-4 md:hidden">
+          <nav className="space-y-2 border-t border-slate-200 pb-4 pt-4 dark:border-slate-800 md:hidden">
             {navItems.map((item) => (
               <a
                 key={item.name}
                 href={item.href}
-                className="block rounded-2xl px-4 py-3 text-slate-300 transition-colors duration-300 hover:bg-slate-900 hover:text-cyan-300"
+                className="block rounded-2xl px-4 py-3 text-slate-700 transition-colors duration-300 hover:bg-slate-100 hover:text-cyan-600 dark:text-slate-300 dark:hover:bg-slate-900 dark:hover:text-cyan-300"
                 onClick={() => setIsOpen(false)}
               >
                 {item.name}
@@ -76,7 +79,7 @@ export default function Header() {
             ))}
             <a
               href="#contact"
-              className="mt-2 block rounded-2xl border border-cyan-500/30 bg-cyan-500/10 px-4 py-3 text-center font-medium text-cyan-300"
+              className="mt-2 block rounded-2xl border border-cyan-500/30 bg-cyan-500/10 px-4 py-3 text-center font-medium text-cyan-700 dark:text-cyan-300"
               onClick={() => setIsOpen(false)}
             >
               Let&apos;s Talk

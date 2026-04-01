@@ -28,7 +28,7 @@ export default function Hero() {
       <div className="container-max">
         <div className="grid items-center gap-10 lg:grid-cols-[1.2fr_0.8fr]">
           <div className="space-y-8">
-            <div className="inline-flex items-center gap-2 rounded-full border border-cyan-500/30 bg-cyan-500/10 px-4 py-2 text-sm font-medium text-cyan-300 backdrop-blur-sm">
+            <div className="inline-flex items-center gap-2 rounded-full border border-cyan-500/30 bg-cyan-500/10 px-4 py-2 text-sm font-medium text-cyan-700 backdrop-blur-sm dark:text-cyan-300">
               <span className="size-2 rounded-full bg-cyan-400" />
               Dhaka-based and open to remote Laravel work
             </div>
@@ -37,13 +37,13 @@ export default function Hero() {
               <p className="text-sm font-semibold uppercase tracking-[0.35em] text-slate-400">
                 {portfolioOwner.name}
               </p>
-              <h1 className="max-w-4xl text-5xl font-bold tracking-tight text-white md:text-7xl">
+              <h1 className="max-w-4xl text-5xl font-bold tracking-tight text-slate-950 md:text-7xl dark:text-white">
                 {portfolioOwner.title}
                 <span className="block bg-gradient-to-r from-cyan-300 via-cyan-400 to-blue-500 bg-clip-text text-transparent">
                   building scalable systems for global clients.
                 </span>
               </h1>
-              <p className="max-w-2xl text-lg leading-8 text-slate-300 md:text-xl">
+              <p className="max-w-2xl text-lg leading-8 text-slate-700 md:text-xl dark:text-slate-300">
                 I help startups and growing teams ship secure Laravel backends, production-ready APIs, payment workflows, and full-stack features that stay fast, maintainable, and reliable under real use.
               </p>
             </div>
@@ -60,9 +60,9 @@ export default function Hero() {
 
             <div className="grid gap-4 sm:grid-cols-3">
               {proofItems.map((item) => (
-                <div key={item.label} className="rounded-2xl border border-slate-800 bg-slate-900/70 p-4">
-                  <p className="text-lg font-semibold text-white">{item.value}</p>
-                  <p className="text-sm text-slate-400">{item.label}</p>
+                <div key={item.label} className="rounded-2xl border border-slate-200 bg-white/80 p-4 dark:border-slate-800 dark:bg-slate-900/70">
+                  <p className="text-lg font-semibold text-slate-950 dark:text-white">{item.value}</p>
+                  <p className="text-sm text-slate-600 dark:text-slate-400">{item.label}</p>
                 </div>
               ))}
             </div>
@@ -73,10 +73,10 @@ export default function Hero() {
                   href={portfolioOwner.github}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="rounded-full border border-slate-800 bg-slate-900/70 p-3 transition-all duration-300 hover:border-cyan-500/50 hover:bg-cyan-500/10"
+                  className="rounded-full border border-slate-200 bg-white/80 p-3 transition-all duration-300 hover:border-cyan-500/50 hover:bg-cyan-500/10 dark:border-slate-800 dark:bg-slate-900/70"
                   aria-label="GitHub"
                 >
-                  <Github size={22} className="text-slate-300" />
+                  <Github size={22} className="text-slate-700 dark:text-slate-300" />
                 </a>
               )}
               {portfolioOwner.linkedin && (
@@ -84,18 +84,18 @@ export default function Hero() {
                   href={portfolioOwner.linkedin}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="rounded-full border border-slate-800 bg-slate-900/70 p-3 transition-all duration-300 hover:border-cyan-500/50 hover:bg-cyan-500/10"
+                  className="rounded-full border border-slate-200 bg-white/80 p-3 transition-all duration-300 hover:border-cyan-500/50 hover:bg-cyan-500/10 dark:border-slate-800 dark:bg-slate-900/70"
                   aria-label="LinkedIn"
                 >
-                  <Linkedin size={22} className="text-slate-300" />
+                  <Linkedin size={22} className="text-slate-700 dark:text-slate-300" />
                 </a>
               )}
               <a
                 href={`mailto:${portfolioOwner.email}`}
-                className="rounded-full border border-slate-800 bg-slate-900/70 p-3 transition-all duration-300 hover:border-cyan-500/50 hover:bg-cyan-500/10"
+                className="rounded-full border border-slate-200 bg-white/80 p-3 transition-all duration-300 hover:border-cyan-500/50 hover:bg-cyan-500/10 dark:border-slate-800 dark:bg-slate-900/70"
                 aria-label="Email"
               >
-                <Mail size={22} className="text-slate-300" />
+                <Mail size={22} className="text-slate-700 dark:text-slate-300" />
               </a>
             </div>
           </div>
@@ -104,10 +104,10 @@ export default function Hero() {
             <div className="absolute inset-0 rounded-[2rem] bg-gradient-to-br from-cyan-500/20 to-blue-500/10 blur-2xl" />
             <div className="glass-effect relative space-y-8 rounded-[2rem] p-8 md:p-10">
               <div className="space-y-3">
-                <p className="text-sm font-semibold uppercase tracking-[0.3em] text-cyan-300">
+                <p className="text-sm font-semibold uppercase tracking-[0.3em] text-cyan-700 dark:text-cyan-300">
                   What You Get
                 </p>
-                <h2 className="text-2xl font-semibold text-white">
+                <h2 className="text-2xl font-semibold text-slate-950 dark:text-white">
                   A practical builder for product-facing Laravel work.
                 </h2>
               </div>
@@ -116,17 +116,17 @@ export default function Hero() {
                 {focusAreas.map((item) => (
                   <div
                     key={item}
-                    className="rounded-2xl border border-slate-800 bg-slate-950/60 px-4 py-4 text-sm text-slate-300"
+                    className="rounded-2xl border border-slate-200 bg-white/90 px-4 py-4 text-sm text-slate-700 dark:border-slate-800 dark:bg-slate-950/60 dark:text-slate-300"
                   >
                     {item}
                   </div>
                 ))}
               </div>
 
-              <div className="rounded-2xl border border-slate-800 bg-slate-950/60 p-5">
+              <div className="rounded-2xl border border-slate-200 bg-white/90 p-5 dark:border-slate-800 dark:bg-slate-950/60">
                 <p className="text-sm uppercase tracking-[0.25em] text-slate-400">Based in</p>
-                <p className="mt-2 text-lg font-semibold text-white">{portfolioOwner.location}</p>
-                <p className="mt-3 text-sm text-slate-400">
+                <p className="mt-2 text-lg font-semibold text-slate-950 dark:text-white">{portfolioOwner.location}</p>
+                <p className="mt-3 text-sm text-slate-600 dark:text-slate-400">
                   Best fit for teams that need a senior Laravel engineer who can code, ship, optimize, and communicate clearly with clients and product teams.
                 </p>
               </div>
