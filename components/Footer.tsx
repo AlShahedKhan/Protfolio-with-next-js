@@ -1,8 +1,6 @@
-'use client';
-
 import Link from 'next/link';
 import { ArrowUp, Github, Linkedin, Mail, Twitter } from 'lucide-react';
-import { portfolioOwner } from '@/lib/portfolio-data';
+import { getPortfolioOwner } from '@/lib/content';
 
 const quickLinks = [
   { name: 'About', href: '#about' },
@@ -19,10 +17,7 @@ const focusAreas = [
 ];
 
 export default function Footer() {
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
+  const portfolioOwner = getPortfolioOwner();
   const getInitial = () => portfolioOwner.name.charAt(0).toUpperCase();
 
   const socialLinks = [
@@ -39,7 +34,7 @@ export default function Footer() {
       <div className="container-max py-16">
         <div className="mb-12 grid gap-12 md:grid-cols-4">
           <div className="space-y-4">
-            <Link href="#" className="flex items-center gap-3 group">
+            <Link href="/" className="flex items-center gap-3 group">
               <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-400 to-blue-500 font-bold text-slate-950 transition-transform duration-300 group-hover:scale-105">
                 {getInitial()}
               </div>
@@ -110,15 +105,14 @@ export default function Footer() {
             Copyright {currentYear} {portfolioOwner.name}. All rights reserved.
           </p>
 
-          <button
-            onClick={scrollToTop}
-            suppressHydrationWarning
+          <a
+            href="#top"
             className="inline-flex items-center gap-2 rounded-full border border-slate-700 bg-slate-900/70 px-4 py-2 text-sm text-slate-300 transition-all duration-300 hover:border-cyan-500/40 hover:text-cyan-300"
             aria-label="Scroll to top"
           >
             Back to Top
             <ArrowUp size={16} />
-          </button>
+          </a>
         </div>
       </div>
     </footer>

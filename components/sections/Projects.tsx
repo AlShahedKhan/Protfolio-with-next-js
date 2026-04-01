@@ -1,14 +1,12 @@
-'use client';
-
 import { ExternalLink, Github } from 'lucide-react';
 import Image from 'next/image';
-import { projectsData } from '@/lib/portfolio-data';
+import { getFeaturedProjects } from '@/lib/content';
 
 const isRealProjectLink = (link?: string) =>
   Boolean(link && !link.includes('example.com') && link !== 'https://github.com');
 
 export default function Projects() {
-  const selectedProjects = projectsData.filter((project) => project.featured).slice(0, 3);
+  const selectedProjects = getFeaturedProjects();
 
   return (
     <section id="projects" className="relative py-20 md:py-28">

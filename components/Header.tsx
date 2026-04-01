@@ -2,13 +2,8 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Menu, Moon, Sun, X } from 'lucide-react';
-import { portfolioOwner } from '@/lib/portfolio-data';
-
-interface HeaderProps {
-  darkMode: boolean;
-  setDarkMode: (value: boolean) => void;
-}
+import { Menu, X } from 'lucide-react';
+import { getPortfolioOwner } from '@/lib/content';
 
 const navItems = [
   { name: 'About', href: '#about' },
@@ -17,7 +12,9 @@ const navItems = [
   { name: 'Contact', href: '#contact' },
 ];
 
-export default function Header({ darkMode, setDarkMode }: HeaderProps) {
+const portfolioOwner = getPortfolioOwner();
+
+export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const getInitial = () => portfolioOwner.name.charAt(0).toUpperCase();
 
@@ -25,7 +22,7 @@ export default function Header({ darkMode, setDarkMode }: HeaderProps) {
     <header className="sticky top-0 z-50 border-b border-slate-800 bg-slate-950/85 backdrop-blur-xl">
       <div className="container-max">
         <div className="flex h-20 items-center justify-between gap-4">
-          <Link href="#" className="flex items-center gap-3 group">
+          <Link href="/" className="flex items-center gap-3 group">
             <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-400 to-blue-500 font-bold text-slate-950 transition-transform duration-300 group-hover:scale-105">
               {getInitial()}
             </div>
@@ -54,14 +51,6 @@ export default function Header({ darkMode, setDarkMode }: HeaderProps) {
             >
               Let&apos;s Talk
             </a>
-
-            <button
-              onClick={() => setDarkMode(!darkMode)}
-              className="rounded-full border border-slate-800 p-2.5 transition-colors duration-300 hover:bg-slate-800"
-              aria-label="Toggle dark mode"
-            >
-              {darkMode ? <Sun size={18} className="text-slate-300" /> : <Moon size={18} className="text-slate-300" />}
-            </button>
 
             <button
               onClick={() => setIsOpen(!isOpen)}

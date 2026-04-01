@@ -1,11 +1,14 @@
 {
-  "name": "my-project",
+  "name": "abdullah-al-shahed-portfolio",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "build:standalone": "next build && node scripts/prepare-standalone.mjs",
+    "typecheck": "tsc --noEmit",
     "start": "next start",
+    "start:standalone": "node .next/standalone/server.js",
     "lint": "eslint ."
   },
   "dependencies": {

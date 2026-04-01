@@ -1,10 +1,13 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowLeft, Calendar, Clock } from 'lucide-react';
-import { blogPostsData, portfolioOwner } from '@/lib/portfolio-data';
+import { getBlogPosts, getPortfolioOwner } from '@/lib/content';
 import { formatDate } from '@/lib/format-date';
 
 export default function BlogIndexPage() {
+  const blogPostsData = getBlogPosts();
+  const portfolioOwner = getPortfolioOwner();
+
   return (
     <main className="min-h-screen bg-slate-950 text-white">
       <section className="border-b border-slate-800 bg-slate-950/95 backdrop-blur">

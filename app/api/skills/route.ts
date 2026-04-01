@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { siteFeatures } from '@/lib/site-config';
 
 const mockSkills = [
   { id: 1, name: 'Laravel', category: 'Backend', level: 95, created_at: '2024-01-15' },
@@ -12,6 +13,10 @@ const mockSkills = [
 ];
 
 export async function GET() {
+  if (!siteFeatures.mockApi) {
+    return NextResponse.json({ error: 'Not found' }, { status: 404 });
+  }
+
   return NextResponse.json({
     success: true,
     data: mockSkills,
@@ -19,6 +24,10 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
+  if (!siteFeatures.mockApi) {
+    return NextResponse.json({ error: 'Not found' }, { status: 404 });
+  }
+
   const body = await request.json();
 
   const newSkill = {

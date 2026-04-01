@@ -1,18 +1,32 @@
 import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
-import { portfolioOwner } from '@/lib/portfolio-data'
+import { getPortfolioOwner } from '@/lib/content'
+import { getSiteUrl } from '@/lib/site-config'
 import './globals.css'
 
 const _geist = Geist({ subsets: ["latin"], variable: '--font-geist' });
 const _geistMono = Geist_Mono({ subsets: ["latin"], variable: '--font-geist-mono' });
-const siteUrl = portfolioOwner.siteUrl || undefined;
+const portfolioOwner = getPortfolioOwner();
+const siteUrl = getSiteUrl();
 
 export const metadata: Metadata = {
+  ...(siteUrl ? { metadataBase: new URL(siteUrl) } : {}),
   title: `${portfolioOwner.name} | ${portfolioOwner.title}`,
   description: `${portfolioOwner.title} from ${portfolioOwner.location} with ${portfolioOwner.yearsExperience}+ years of professional experience building Laravel APIs, SaaS platforms, and scalable web applications.`,
   keywords: ['Laravel', 'PHP', 'Backend Architect', 'REST APIs', 'Redis', 'Docker', 'AWS', 'Stripe', 'PayPal', 'SaaS Development'],
   authors: [{ name: portfolioOwner.name }],
+  robots: {
+    index: true,
+    follow: true,
+  },
+  ...(siteUrl
+    ? {
+        alternates: {
+          canonical: '/',
+        },
+      }
+    : {}),
   openGraph: {
     type: 'website',
     locale: 'en_US',
@@ -21,16 +35,13 @@ export const metadata: Metadata = {
     ...(siteUrl
       ? {
           url: siteUrl,
-          images: [
-            {
-              url: `${siteUrl}/og-image.png`,
-              width: 1200,
-              height: 630,
-              alt: `${portfolioOwner.name} portfolio preview`,
-            },
-          ],
         }
       : {}),
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: `${portfolioOwner.name} Portfolio`,
+    description: `${portfolioOwner.title} with ${portfolioOwner.yearsExperience}+ years of professional experience.`,
   },
   icons: {
     icon: [

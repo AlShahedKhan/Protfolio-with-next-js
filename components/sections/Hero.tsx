@@ -1,13 +1,13 @@
-'use client';
-
 import Link from 'next/link';
 import { ArrowRight, Github, Linkedin, Mail } from 'lucide-react';
-import { portfolioOwner } from '@/lib/portfolio-data';
+import { getPortfolioOwner } from '@/lib/content';
+
+const portfolioOwner = getPortfolioOwner();
 
 const proofItems = [
   { value: `${portfolioOwner.yearsExperience}+ Years`, label: 'Professional Laravel work' },
-  { value: '30+ Projects', label: 'Production delivery' },
-  { value: '100% JSS', label: 'Upwork proof' },
+  { value: 'Global Clients', label: 'USA, UK, Japan, UAE, Australia' },
+  { value: 'API to Deploy', label: 'Backend ownership across delivery' },
 ];
 
 const focusAreas = [

@@ -231,7 +231,6 @@ export const aboutData = {
   description: 'I build robust Laravel applications across AI platforms, SaaS products, fintech workflows, real-time systems, and education platforms. My work spans backend architecture, API design, payment integration, deployment, and hands-on delivery from concept to production.',
   highlights: [
     '30+ production projects delivered',
-    '100% Job Success on Upwork',
     'Global client experience across the USA, UK, Japan, UAE, Australia, Canada, and Asia',
     'Strong in Laravel 8-12, Redis, Docker, AWS, Stripe, and PayPal',
     'Comfortable owning architecture, delivery, and team collaboration',

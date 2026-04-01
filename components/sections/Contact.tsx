@@ -1,8 +1,7 @@
-'use client';
-
 import { ArrowRight, Github, Linkedin, Mail, MapPin, Phone } from 'lucide-react';
-import { portfolioOwner } from '@/lib/portfolio-data';
+import { getPortfolioOwner } from '@/lib/content';
 
+const portfolioOwner = getPortfolioOwner();
 const locationQuery = encodeURIComponent(portfolioOwner.location);
 
 const contactItems = [

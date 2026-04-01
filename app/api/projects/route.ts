@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { siteFeatures } from '@/lib/site-config';
 
 const mockProjects = [
   {
@@ -28,6 +29,10 @@ const mockProjects = [
 ];
 
 export async function GET() {
+  if (!siteFeatures.mockApi) {
+    return NextResponse.json({ error: 'Not found' }, { status: 404 });
+  }
+
   return NextResponse.json({
     success: true,
     data: mockProjects,
@@ -35,6 +40,10 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
+  if (!siteFeatures.mockApi) {
+    return NextResponse.json({ error: 'Not found' }, { status: 404 });
+  }
+
   const body = await request.json();
 
   const newProject = {

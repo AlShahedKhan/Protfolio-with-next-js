@@ -3,7 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ArrowLeft, Calendar, Clock } from 'lucide-react';
-import { blogPostsData, portfolioOwner } from '@/lib/portfolio-data';
+import { getBlogPostBySlug, getBlogPosts, getPortfolioOwner } from '@/lib/content';
 import { formatDate } from '@/lib/format-date';
 
 type BlogPostPageProps = {
@@ -12,17 +12,17 @@ type BlogPostPageProps = {
   }>;
 };
 
-const getPostBySlug = (slug: string) => blogPostsData.find((post) => post.slug === slug);
+const portfolioOwner = getPortfolioOwner();
 
 export function generateStaticParams() {
-  return blogPostsData.map((post) => ({
+  return getBlogPosts().map((post) => ({
     slug: post.slug,
   }));
 }
 
 export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const post = getPostBySlug(slug);
+  const post = getBlogPostBySlug(slug);
 
   if (!post) {
     return {
@@ -38,7 +38,7 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
 
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const { slug } = await params;
-  const post = getPostBySlug(slug);
+  const post = getBlogPostBySlug(slug);
 
   if (!post) {
     notFound();

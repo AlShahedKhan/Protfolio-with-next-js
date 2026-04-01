@@ -1,7 +1,7 @@
-'use client';
-
 import { Code2, Database, Globe } from 'lucide-react';
-import { aboutData } from '@/lib/portfolio-data';
+import { getAboutData } from '@/lib/content';
+
+const aboutData = getAboutData();
 
 const strengths = [
   {

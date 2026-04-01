@@ -1,9 +1,9 @@
-'use client';
-
 import { Briefcase, Calendar } from 'lucide-react';
-import { experienceData } from '@/lib/portfolio-data';
+import { getExperience } from '@/lib/content';
 
 export default function Experience() {
+  const experienceData = getExperience();
+
   return (
     <section id="experience" className="relative bg-slate-900/40 py-20 md:py-28">
       <div className="container-max">

@@ -1,9 +1,7 @@
-'use client';
-
-import { skillsData } from '@/lib/portfolio-data';
+import { getSkills } from '@/lib/content';
 
 export default function Skills() {
-  // Group skills by category
+  const skillsData = getSkills();
   const skillsByCategory = skillsData.reduce((acc, skill) => {
     if (!acc[skill.category]) {
       acc[skill.category] = [];
@@ -11,16 +9,6 @@ export default function Skills() {
     acc[skill.category].push(skill);
     return acc;
   }, {} as Record<string, typeof skillsData>);
-
-  const getLevelPercentage = (level: string) => {
-    const levels = {
-      'beginner': 40,
-      'intermediate': 65,
-      'advanced': 85,
-      'expert': 95,
-    };
-    return levels[level as keyof typeof levels];
-  };
 
   return (
     <section id="skills" className="py-20 md:py-32 bg-slate-900/50 relative overflow-hidden">
@@ -33,29 +21,21 @@ export default function Skills() {
           </p>
         </div>
 
-        {/* Skills Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
           {Object.entries(skillsByCategory).map(([category, skills]) => (
             <div key={category} className="glass-effect p-6 animate-fade-in">
               <h3 className="text-lg font-bold text-white mb-6 pb-4 border-b border-slate-700">
                 {category}
               </h3>
-              <div className="space-y-5">
+              <div className="flex flex-wrap gap-3">
                 {skills.map((skill) => {
-                  const percentage = getLevelPercentage(skill.level);
                   return (
-                    <div key={skill.id}>
-                      <div className="flex justify-between items-center mb-2">
-                        <span className="text-sm font-medium text-slate-300">{skill.name}</span>
-                        <span className="text-xs text-cyan-400 font-semibold">{skill.level}</span>
-                      </div>
-                      <div className="w-full bg-slate-700/50 rounded-full h-2 overflow-hidden">
-                        <div
-                          className="bg-gradient-to-r from-cyan-400 to-blue-500 h-full rounded-full transition-all duration-1000 ease-out"
-                          style={{ width: `${percentage}%` }}
-                        ></div>
-                      </div>
-                    </div>
+                    <span
+                      key={skill.id}
+                      className="rounded-full border border-slate-700 bg-slate-950/70 px-3 py-1 text-sm text-slate-200"
+                    >
+                      {skill.name}
+                    </span>
                   );
                 })}
               </div>
@@ -63,7 +43,6 @@ export default function Skills() {
           ))}
         </div>
 
-        {/* Additional Skills */}
         <div className="mt-12 glass-effect p-8">
           <h3 className="text-xl font-bold text-white mb-6">Other Proficiencies</h3>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
