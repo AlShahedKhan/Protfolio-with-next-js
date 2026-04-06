@@ -1,116 +1,264 @@
-'use client';
-
-import { useState } from 'react';
-import { Plus, Edit2, Trash2, ExternalLink } from 'lucide-react';
 import Link from 'next/link';
-import { projectsData } from '@/lib/portfolio-data';
+import { redirect } from 'next/navigation';
+import { Edit3, ExternalLink, Github, Plus, Sparkles } from 'lucide-react';
+import DeleteProjectButton from '@/components/admin/DeleteProjectButton';
+import { ADMIN_LOGIN_PATH } from '@/lib/admin-auth-constants';
+import { getAdminSession, getLaravelApiUrl } from '@/lib/admin-auth';
+import { extractAdminProjects, extractApiMessage } from '@/lib/admin-projects';
 
-export default function ProjectsAdmin() {
-  const [projects] = useState(projectsData);
+type ProjectsAdminPageProps = {
+  searchParams: Promise<{
+    created?: string;
+    updated?: string;
+    deleted?: string;
+  }>;
+};
 
-  const deleteProject = (id: string) => {
-    console.log('[v0] Deleting project:', id);
-    // This will be connected to your Laravel backend
-  };
+const chipClassName =
+  'inline-flex rounded-full border border-slate-700 bg-slate-950/70 px-3 py-1 text-xs font-medium text-slate-300';
+
+async function getProjects() {
+  const session = await getAdminSession();
+
+  if (!session) {
+    redirect(ADMIN_LOGIN_PATH);
+  }
+
+  try {
+    const response = await fetch(getLaravelApiUrl('/api/v1/admin/projects'), {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        Authorization: `Bearer ${session.accessToken}`,
+      },
+      cache: 'no-store',
+    });
+
+    const payload = (await response.json().catch(() => null)) as unknown;
+
+    if (!response.ok) {
+      return {
+        projects: [],
+        error: extractApiMessage(payload, 'Unable to load projects from the Laravel backend.'),
+      };
+    }
+
+    return {
+      projects: extractAdminProjects(payload),
+      error: null,
+    };
+  } catch {
+    return {
+      projects: [],
+      error:
+        'Unable to reach the Laravel projects endpoint right now. Check that the backend is running and reachable from the Next.js server.',
+    };
+  }
+}
+
+export default async function ProjectsAdmin({ searchParams }: ProjectsAdminPageProps) {
+  const [{ projects, error }, params] = await Promise.all([getProjects(), searchParams]);
+  const wasCreated = params.created === '1';
+  const wasUpdated = params.updated === '1';
+  const wasDeleted = params.deleted === '1';
 
   return (
     <div className="space-y-8">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-4xl font-bold text-white mb-2">Projects</h1>
-          <p className="text-slate-400">Manage your portfolio projects</p>
+      <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+        <div className="space-y-2">
+          <h1 className="text-4xl font-bold text-white">Projects</h1>
+          <p className="max-w-2xl text-slate-400">
+            These rows are now coming from your Laravel admin backend, not from local mock data.
+          </p>
         </div>
+
         <Link
           href="/admin/projects/new"
-          className="flex items-center gap-2 px-6 py-3 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white font-semibold transition-all duration-300"
+          className="inline-flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-500 px-6 py-3 font-semibold text-white transition-all duration-300 hover:from-cyan-600 hover:to-blue-600"
         >
           <Plus size={20} />
           Add Project
         </Link>
       </div>
 
-      {/* Projects Table */}
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead>
-              <tr className="border-b border-slate-800 bg-slate-800/50">
-                <th className="px-6 py-4 text-left text-sm font-semibold text-slate-300">Title</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-slate-300">Description</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-slate-300">Technologies</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-slate-300">Featured</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-slate-300">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {projects.map((project) => (
-                <tr key={project.id} className="border-b border-slate-800 hover:bg-slate-800/50 transition-colors duration-300">
-                  <td className="px-6 py-4">
-                    <p className="font-semibold text-white">{project.title}</p>
-                  </td>
-                  <td className="px-6 py-4">
-                    <p className="text-slate-400 text-sm truncate">{project.description}</p>
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="flex gap-2 flex-wrap">
-                      {project.technologies.slice(0, 2).map((tech) => (
-                        <span
-                          key={tech}
-                          className="px-2 py-1 text-xs rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20"
-                        >
-                          {tech}
-                        </span>
-                      ))}
-                      {project.technologies.length > 2 && (
-                        <span className="text-xs text-slate-400">+{project.technologies.length - 2} more</span>
-                      )}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4">
-                    <span className={`px-3 py-1 text-xs rounded-full font-medium ${
-                      project.featured
-                        ? 'bg-green-500/10 text-green-400'
-                        : 'bg-slate-700/50 text-slate-400'
-                    }`}>
-                      {project.featured ? 'Featured' : 'Standard'}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="flex gap-3">
-                      <Link
-                        href={`/admin/projects/${project.id}`}
-                        className="p-2 hover:bg-slate-700 rounded-lg transition-colors duration-300 text-cyan-400"
-                      >
-                        <Edit2 size={18} />
-                      </Link>
-                      <button
-                        onClick={() => deleteProject(project.id)}
-                        className="p-2 hover:bg-slate-700 rounded-lg transition-colors duration-300 text-red-400"
-                      >
-                        <Trash2 size={18} />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+      {wasCreated && (
+        <div className="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-100">
+          Project created successfully and stored in Laravel.
         </div>
-      </div>
+      )}
 
-      {/* Empty State */}
-      {projects.length === 0 && (
-        <div className="flex flex-col items-center justify-center py-12 bg-slate-900 border border-slate-800 rounded-2xl">
-          <ExternalLink size={48} className="text-slate-600 mb-4" />
-          <h3 className="text-lg font-semibold text-slate-300 mb-2">No projects yet</h3>
-          <p className="text-slate-400 mb-6">Create your first project to get started</p>
+      {wasUpdated && (
+        <div className="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-100">
+          Project updated successfully in Laravel.
+        </div>
+      )}
+
+      {wasDeleted && (
+        <div className="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-100">
+          Project deleted successfully from Laravel.
+        </div>
+      )}
+
+      {error && (
+        <div className="rounded-2xl border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-sm text-amber-100">
+          {error}
+        </div>
+      )}
+
+      {projects.length === 0 ? (
+        <div className="flex flex-col items-center justify-center rounded-[2rem] border border-slate-800 bg-slate-900 py-16 text-center">
+          <ExternalLink size={48} className="mb-4 text-slate-600" />
+          <h2 className="text-xl font-semibold text-white">No projects in Laravel yet</h2>
+          <p className="mt-2 max-w-md text-sm text-slate-400">
+            Create your first project from the admin form and it will appear here immediately after
+            the redirect.
+          </p>
           <Link
             href="/admin/projects/new"
-            className="px-6 py-2 rounded-lg bg-cyan-500 hover:bg-cyan-600 text-white font-semibold transition-colors duration-300"
+            className="mt-6 inline-flex items-center gap-2 rounded-2xl bg-cyan-500 px-5 py-3 font-semibold text-white transition-colors hover:bg-cyan-600"
           >
-            Add Project
+            <Plus size={18} />
+            Create first project
           </Link>
+        </div>
+      ) : (
+        <div className="overflow-hidden rounded-[2rem] border border-slate-800 bg-slate-900/80">
+          <div className="overflow-x-auto">
+            <table className="min-w-full">
+              <thead>
+                <tr className="border-b border-slate-800 bg-slate-950/80">
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-slate-300">
+                    Project
+                  </th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-slate-300">
+                    Technologies
+                  </th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-slate-300">
+                    Visibility
+                  </th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-slate-300">
+                    Context
+                  </th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-slate-300">
+                    Links
+                  </th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-slate-300">
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {projects.map((project) => (
+                  <tr
+                    key={project.id}
+                    className="border-b border-slate-800/80 align-top transition-colors duration-300 hover:bg-slate-800/40"
+                  >
+                    <td className="px-6 py-5">
+                      <div className="space-y-2">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <p className="text-base font-semibold text-white">{project.title}</p>
+                          {project.featured && (
+                            <span className="inline-flex items-center gap-1 rounded-full border border-cyan-500/30 bg-cyan-500/10 px-3 py-1 text-xs font-semibold text-cyan-200">
+                              <Sparkles size={12} />
+                              Featured
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-xs uppercase tracking-[0.22em] text-slate-500">
+                          {project.slug}
+                        </p>
+                        <p className="max-w-xl text-sm leading-6 text-slate-400">
+                          {project.description}
+                        </p>
+                      </div>
+                    </td>
+
+                    <td className="px-6 py-5">
+                      <div className="flex max-w-sm flex-wrap gap-2">
+                        {project.technologies.map((technology) => (
+                          <span key={technology} className={chipClassName}>
+                            {technology}
+                          </span>
+                        ))}
+                      </div>
+                    </td>
+
+                    <td className="px-6 py-5">
+                      <div className="flex flex-wrap gap-2">
+                        <span
+                          className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${
+                            project.published
+                              ? 'bg-emerald-500/10 text-emerald-300'
+                              : 'bg-slate-700/60 text-slate-300'
+                          }`}
+                        >
+                          {project.published ? 'Published' : 'Draft'}
+                        </span>
+                        {project.confidential && (
+                          <span className="inline-flex rounded-full bg-amber-500/10 px-3 py-1 text-xs font-semibold text-amber-300">
+                            Confidential
+                          </span>
+                        )}
+                      </div>
+                    </td>
+
+                    <td className="px-6 py-5">
+                      <div className="space-y-2 text-sm text-slate-400">
+                        {project.role && <p>{project.role}</p>}
+                        {project.client_region && <p>{project.client_region}</p>}
+                        <p>Sort order: {project.sort_order ?? 'not set'}</p>
+                      </div>
+                    </td>
+
+                    <td className="px-6 py-5">
+                      <div className="flex flex-col items-start gap-2">
+                        {project.live_url ? (
+                          <a
+                            href={project.live_url}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="inline-flex items-center gap-2 text-sm font-medium text-cyan-300 transition-colors hover:text-cyan-200"
+                          >
+                            <ExternalLink size={16} />
+                            Live URL
+                          </a>
+                        ) : (
+                          <span className="text-sm text-slate-500">No live URL</span>
+                        )}
+
+                        {project.github_url ? (
+                          <a
+                            href={project.github_url}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="inline-flex items-center gap-2 text-sm font-medium text-slate-300 transition-colors hover:text-white"
+                          >
+                            <Github size={16} />
+                            GitHub
+                          </a>
+                        ) : (
+                          <span className="text-sm text-slate-500">No GitHub URL</span>
+                        )}
+                      </div>
+                    </td>
+
+                    <td className="px-6 py-5">
+                      <div className="flex min-w-44 flex-col gap-3">
+                        <Link
+                          href={`/admin/projects/${encodeURIComponent(project.slug)}`}
+                          className="inline-flex items-center gap-2 rounded-xl border border-cyan-500/20 bg-cyan-500/10 px-3 py-2 text-sm font-medium text-cyan-100 transition-colors hover:bg-cyan-500/20"
+                        >
+                          <Edit3 size={16} />
+                          Edit
+                        </Link>
+                        <DeleteProjectButton slug={project.slug} title={project.title} />
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
     </div>
