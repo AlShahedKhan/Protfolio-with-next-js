@@ -1,21 +1,31 @@
 'use client';
 
 import { useState } from 'react';
+import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { Home, LogOut, Menu, X } from 'lucide-react';
+import { Award, BookOpen, Briefcase, Code2, Home, LayoutDashboard, Quote, Settings, X, Menu } from 'lucide-react';
+import type { AdminUser } from '@/lib/admin-auth';
+import AdminLogoutButton from '@/components/admin/AdminLogoutButton';
 
 const adminNavItems = [
-  { name: 'Dashboard', href: '/admin', icon: 'home' },
-  { name: 'Projects', href: '/admin/projects', icon: 'briefcase' },
-  { name: 'Skills', href: '/admin/skills', icon: 'code' },
-  { name: 'Experience', href: '/admin/experience', icon: 'award' },
-  { name: 'Testimonials', href: '/admin/testimonials', icon: 'quote' },
-  { name: 'Blog Posts', href: '/admin/blog', icon: 'edit' },
-  { name: 'Settings', href: '/admin/settings', icon: 'settings' },
+  { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
+  { name: 'Projects', href: '/admin/projects', icon: Briefcase },
+  { name: 'Skills', href: '/admin/skills', icon: Code2 },
+  { name: 'Experience', href: '/admin/experience', icon: Award },
+  { name: 'Testimonials', href: '/admin/testimonials', icon: Quote },
+  { name: 'Blog Posts', href: '/admin/blog', icon: BookOpen },
+  { name: 'Settings', href: '/admin/settings', icon: Settings },
 ];
 
-export default function AdminShell({ children }: { children: React.ReactNode }) {
+export default function AdminShell({
+  children,
+  user,
+}: {
+  children: React.ReactNode;
+  user: AdminUser;
+}) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const pathname = usePathname();
 
   return (
     <div className="flex h-screen bg-slate-950 text-white">
@@ -37,16 +47,26 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
         </div>
 
         <nav className="space-y-2 p-4">
-          {adminNavItems.map((item) => (
-            <Link
-              key={item.name}
-              href={item.href}
-              className="group flex items-center gap-3 rounded-lg px-4 py-3 transition-colors duration-300 hover:bg-slate-800"
-            >
-              <span className="h-5 w-5">{item.icon}</span>
-              {sidebarOpen && <span className="text-sm font-medium">{item.name}</span>}
-            </Link>
-          ))}
+          {adminNavItems.map((item) => {
+            const Icon = item.icon;
+            const isActive =
+              item.href === '/admin'
+                ? pathname === item.href
+                : pathname === item.href || pathname.startsWith(`${item.href}/`);
+
+            return (
+              <Link
+                key={item.name}
+                href={item.href}
+                className={`group flex items-center gap-3 rounded-lg px-4 py-3 transition-colors duration-300 ${
+                  isActive ? 'bg-slate-800 text-cyan-300' : 'hover:bg-slate-800'
+                }`}
+              >
+                <Icon className="h-5 w-5" />
+                {sidebarOpen && <span className="text-sm font-medium">{item.name}</span>}
+              </Link>
+            );
+          })}
         </nav>
       </aside>
 
@@ -67,10 +87,11 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
               <Home size={20} />
               <span className="text-sm">View Site</span>
             </Link>
-            <button className="flex items-center gap-2 rounded-lg px-4 py-2 transition-colors duration-300 hover:bg-slate-800">
-              <LogOut size={20} />
-              <span className="text-sm">Logout</span>
-            </button>
+            <div className="hidden text-right sm:block">
+              <p className="text-sm font-medium text-white">{user.name}</p>
+              <p className="text-xs text-slate-400">{user.email}</p>
+            </div>
+            <AdminLogoutButton />
           </div>
         </header>
 

@@ -1,7 +1,13 @@
-const isFeatureEnabled = (value: string | undefined) => value === 'true';
+const isFeatureEnabled = (value: string | undefined, defaultValue = false) => {
+  if (value === undefined) {
+    return defaultValue;
+  }
+
+  return value === 'true';
+};
 
 export const siteFeatures = {
-  adminPreview: isFeatureEnabled(process.env.ENABLE_PORTFOLIO_ADMIN_PREVIEW),
+  adminPreview: isFeatureEnabled(process.env.ENABLE_PORTFOLIO_ADMIN_PREVIEW, true),
   mockApi: isFeatureEnabled(process.env.ENABLE_PORTFOLIO_MOCK_API),
 } as const;
 
