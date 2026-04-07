@@ -3,6 +3,9 @@ import 'server-only';
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 import { ADMIN_ACCESS_TOKEN_COOKIE, ADMIN_SESSION_COOKIE } from '@/lib/admin-auth-constants';
+import { getLaravelApiUrl } from '@/lib/laravel-api';
+
+export { getLaravelApiBaseUrl, getLaravelApiUrl } from '@/lib/laravel-api';
 
 export interface AdminUser {
   id: number;
@@ -37,11 +40,6 @@ type AdminSessionPayload = {
 
 const isProduction = process.env.NODE_ENV === 'production';
 
-const normalizeBaseUrl = (value: string) => {
-  const trimmed = value.trim().replace(/\/+$/, '');
-  return trimmed.endsWith('/api') ? trimmed.slice(0, -4) : trimmed;
-};
-
 const isValidDate = (value: Date) => !Number.isNaN(value.getTime());
 
 const parseSessionPayload = (rawValue: string): AdminSessionPayload | null => {
@@ -68,18 +66,6 @@ const getCookieExpiry = (expiresAt: string | null) => {
 
   const parsed = new Date(expiresAt);
   return isValidDate(parsed) ? parsed : undefined;
-};
-
-export const getLaravelApiBaseUrl = () => {
-  const configuredBaseUrl =
-    process.env.LARAVEL_API_BASE_URL ?? process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000';
-
-  return normalizeBaseUrl(configuredBaseUrl);
-};
-
-export const getLaravelApiUrl = (path: string) => {
-  const normalizedPath = path.startsWith('/') ? path : `/${path}`;
-  return `${getLaravelApiBaseUrl()}${normalizedPath}`;
 };
 
 export const clearAdminAuthCookies = (response: NextResponse) => {

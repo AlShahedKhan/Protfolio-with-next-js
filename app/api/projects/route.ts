@@ -1,66 +1,40 @@
 import { NextResponse } from 'next/server';
-import { siteFeatures } from '@/lib/site-config';
+import { getLaravelApiUrl } from '@/lib/laravel-api';
+import { PUBLIC_PROJECTS_PER_PAGE } from '@/lib/public-projects';
 
-const mockProjects = [
-  {
-    id: 1,
-    title: 'E-Commerce Platform',
-    description: 'Full-featured e-commerce platform with product management, shopping cart, and payment integration',
-    image: 'https://images.unsplash.com/photo-1661956600684-40bab6807d23?w=600&h=400&fit=crop',
-    tags: ['Laravel', 'React', 'Stripe', 'PostgreSQL'],
-    link: '#',
-    github: '#',
-    status: 'published',
-    created_at: '2024-01-15',
-    updated_at: '2024-03-20',
-  },
-  {
-    id: 2,
-    title: 'SaaS Analytics Dashboard',
-    description: 'Real-time analytics dashboard with data visualization and user management system',
-    image: 'https://images.unsplash.com/photo-1633356122544-f134324ef6db?w=600&h=400&fit=crop',
-    tags: ['Laravel', 'Vue.js', 'Chart.js', 'MySQL'],
-    link: '#',
-    github: '#',
-    status: 'published',
-    created_at: '2024-02-10',
-    updated_at: '2024-03-18',
-  },
-];
+export async function GET(request: Request) {
+  try {
+    const incomingUrl = new URL(request.url);
+    if (!incomingUrl.searchParams.has('per_page')) {
+      incomingUrl.searchParams.set('per_page', String(PUBLIC_PROJECTS_PER_PAGE));
+    }
 
-export async function GET() {
-  if (!siteFeatures.mockApi) {
-    return NextResponse.json({ error: 'Not found' }, { status: 404 });
+    const queryString = incomingUrl.searchParams.toString();
+    const path = queryString ? `/api/v1/projects?${queryString}` : '/api/v1/projects';
+
+    const response = await fetch(getLaravelApiUrl(path), {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+      },
+      cache: 'no-store',
+    });
+
+    const payload = await response.text();
+
+    return new NextResponse(payload, {
+      status: response.status,
+      headers: {
+        'Content-Type': response.headers.get('Content-Type') ?? 'application/json',
+      },
+    });
+  } catch {
+    return NextResponse.json(
+      {
+        message:
+          'Unable to reach the public projects backend right now. Check that the Laravel API is running and reachable from the Next.js server.',
+      },
+      { status: 502 }
+    );
   }
-
-  return NextResponse.json({
-    success: true,
-    data: mockProjects,
-  });
-}
-
-export async function POST(request: Request) {
-  if (!siteFeatures.mockApi) {
-    return NextResponse.json({ error: 'Not found' }, { status: 404 });
-  }
-
-  const body = await request.json();
-
-  const newProject = {
-    id: Math.max(...mockProjects.map((p) => p.id), 0) + 1,
-    ...body,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  };
-
-  mockProjects.push(newProject);
-
-  return NextResponse.json(
-    {
-      success: true,
-      data: newProject,
-      message: 'Project created successfully',
-    },
-    { status: 201 }
-  );
 }
