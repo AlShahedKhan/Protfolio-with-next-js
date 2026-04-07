@@ -42,7 +42,9 @@ export default async function ProjectsIndexPage({ searchParams }: ProjectsIndexP
   const hasPreviousPage = resolvedCurrentPage > 1;
   const hasNextPage = resolvedCurrentPage < lastPage;
   const numberedLinks =
-    pagination?.links?.filter((link) => typeof link.page === 'number' && link.page > 0) ?? [];
+    pagination?.links?.filter(
+      (link) => typeof link.page === 'number' && link.page > 0 && /^\d+$/.test(link.label.trim())
+    ) ?? [];
 
   return (
     <main id="top" className="bg-white text-slate-950 dark:bg-slate-950 dark:text-white">
@@ -128,7 +130,7 @@ export default async function ProjectsIndexPage({ searchParams }: ProjectsIndexP
                     <div className="flex flex-wrap items-center gap-2">
                       {numberedLinks.map((link) => (
                         <Link
-                          key={link.page}
+                          key={`${link.label}-${link.page}`}
                           href={link.href ?? '#'}
                           aria-current={link.active ? 'page' : undefined}
                           aria-disabled={!link.href}

@@ -16,6 +16,20 @@ type ProjectPageProps = {
 const isRealProjectLink = (link?: string | null) =>
   Boolean(link && !link.includes('example.com') && link !== 'https://github.com');
 
+const normalizeSiteUrl = (value?: string) => value?.trim().replace(/\/+$/, '');
+
+const toAbsoluteUrl = (value: string, siteUrl?: string) => {
+  if (value.startsWith('http://') || value.startsWith('https://')) {
+    return value;
+  }
+
+  if (!siteUrl || !value.startsWith('/')) {
+    return undefined;
+  }
+
+  return `${siteUrl}${value}`;
+};
+
 export async function generateMetadata({ params }: ProjectPageProps): Promise<Metadata> {
   const { slug } = await params;
   const { project } = await getPublicProjectBySlug(slug);
@@ -26,9 +40,38 @@ export async function generateMetadata({ params }: ProjectPageProps): Promise<Me
     };
   }
 
+  const siteUrl = normalizeSiteUrl(process.env.NEXT_PUBLIC_SITE_URL);
+  const canonicalUrl = siteUrl ? `${siteUrl}/projects/${project.slug}` : undefined;
+  const imageUrl = toAbsoluteUrl(project.imageSrc, siteUrl);
+
   return {
     title: `${project.title} | Projects`,
     description: project.description,
+    alternates: canonicalUrl
+      ? {
+          canonical: canonicalUrl,
+        }
+      : undefined,
+    openGraph: {
+      title: `${project.title} | Projects`,
+      description: project.description,
+      type: 'article',
+      url: canonicalUrl,
+      images: imageUrl
+        ? [
+            {
+              url: imageUrl,
+              alt: project.title,
+            },
+          ]
+        : undefined,
+    },
+    twitter: {
+      card: imageUrl ? 'summary_large_image' : 'summary',
+      title: `${project.title} | Projects`,
+      description: project.description,
+      images: imageUrl ? [imageUrl] : undefined,
+    },
   };
 }
 
@@ -39,6 +82,30 @@ export default async function ProjectDetailPage({ params }: ProjectPageProps) {
   if (!project && !error) {
     notFound();
   }
+
+  const showLiveLink = isRealProjectLink(project?.live_url);
+  const showCodeLink = isRealProjectLink(project?.github_url);
+  const hasStorySections = Boolean(project?.problem || project?.solution || project?.outcome);
+  const summaryItems = project
+    ? [
+        {
+          label: 'Role',
+          value: project.role ?? 'Laravel delivery',
+        },
+        {
+          label: 'Region',
+          value: project.client_region ?? 'Global',
+        },
+        {
+          label: 'Tech stack',
+          value: `${project.technologies.length} technologies`,
+        },
+        {
+          label: 'Access',
+          value: project.confidential ? 'Private client work' : 'Public case study',
+        },
+      ]
+    : [];
 
   return (
     <main id="top" className="bg-white text-slate-950 dark:bg-slate-950 dark:text-white">
@@ -99,6 +166,19 @@ export default async function ProjectDetailPage({ params }: ProjectPageProps) {
                     </p>
                   </div>
 
+                  <div className="flex flex-wrap gap-3 text-sm">
+                    {project.role && (
+                      <span className="rounded-full border border-slate-200 bg-white px-4 py-2 text-slate-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300">
+                        {project.role}
+                      </span>
+                    )}
+                    {project.client_region && (
+                      <span className="rounded-full border border-slate-200 bg-white px-4 py-2 text-slate-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300">
+                        {project.client_region}
+                      </span>
+                    )}
+                  </div>
+
                   <div className="flex flex-wrap gap-3">
                     {project.technologies.map((technology) => (
                       <span
@@ -111,7 +191,7 @@ export default async function ProjectDetailPage({ params }: ProjectPageProps) {
                   </div>
 
                   <div className="flex flex-wrap gap-3">
-                    {isRealProjectLink(project.live_url) && (
+                    {showLiveLink && (
                       <a
                         href={project.live_url ?? undefined}
                         target="_blank"
@@ -123,7 +203,7 @@ export default async function ProjectDetailPage({ params }: ProjectPageProps) {
                       </a>
                     )}
 
-                    {isRealProjectLink(project.github_url) && (
+                    {showCodeLink && (
                       <a
                         href={project.github_url ?? undefined}
                         target="_blank"
@@ -135,6 +215,14 @@ export default async function ProjectDetailPage({ params }: ProjectPageProps) {
                       </a>
                     )}
                   </div>
+
+                  {project.confidential && !showLiveLink && !showCodeLink && (
+                    <div className="rounded-[1.5rem] border border-amber-500/20 bg-amber-500/10 px-5 py-4 text-sm leading-7 text-amber-800 dark:text-amber-200">
+                      External links are intentionally hidden for this confidential client project,
+                      but the case study still shows the business context, technical approach, and
+                      outcome.
+                    </div>
+                  )}
                 </div>
 
                 <div className="overflow-hidden rounded-[2rem] border border-slate-200 bg-white/80 shadow-[0_30px_80px_rgba(148,163,184,0.16)] dark:border-slate-800 dark:bg-slate-900/70 dark:shadow-[0_30px_80px_rgba(2,6,23,0.28)]">
@@ -152,80 +240,69 @@ export default async function ProjectDetailPage({ params }: ProjectPageProps) {
 
                   <div className="space-y-4 p-6">
                     <div className="grid gap-4 sm:grid-cols-2">
-                      <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-950/60">
-                        <p className="text-xs uppercase tracking-[0.22em] text-slate-500">
-                          Project slug
-                        </p>
-                        <p className="mt-2 font-semibold text-slate-950 dark:text-white">
-                          {project.slug}
-                        </p>
-                      </div>
-
-                      <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-950/60">
-                        <p className="text-xs uppercase tracking-[0.22em] text-slate-500">
-                          Role
-                        </p>
-                        <p className="mt-2 font-semibold text-slate-950 dark:text-white">
-                          {project.role ?? 'Laravel delivery'}
-                        </p>
-                      </div>
-
-                      <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-950/60">
-                        <p className="text-xs uppercase tracking-[0.22em] text-slate-500">
-                          Region
-                        </p>
-                        <p className="mt-2 font-semibold text-slate-950 dark:text-white">
-                          {project.client_region ?? 'Global'}
-                        </p>
-                      </div>
-
-                      <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-950/60">
-                        <p className="text-xs uppercase tracking-[0.22em] text-slate-500">
-                          Sort order
-                        </p>
-                        <p className="mt-2 font-semibold text-slate-950 dark:text-white">
-                          {project.sort_order ?? 'Not set'}
-                        </p>
-                      </div>
+                      {summaryItems.map((item) => (
+                        <div
+                          key={item.label}
+                          className="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-950/60"
+                        >
+                          <p className="text-xs uppercase tracking-[0.22em] text-slate-500">
+                            {item.label}
+                          </p>
+                          <p className="mt-2 font-semibold text-slate-950 dark:text-white">
+                            {item.value}
+                          </p>
+                        </div>
+                      ))}
                     </div>
                   </div>
                 </div>
               </div>
 
-              <div className="grid gap-6 lg:grid-cols-3">
-                {project.problem && (
-                  <section className="rounded-[2rem] border border-slate-200 bg-white/85 p-6 dark:border-slate-800 dark:bg-slate-900/70">
-                    <p className="text-sm font-semibold uppercase tracking-[0.25em] text-cyan-700 dark:text-cyan-300">
-                      Problem
-                    </p>
-                    <p className="mt-4 leading-7 text-slate-600 dark:text-slate-400">
-                      {project.problem}
-                    </p>
-                  </section>
-                )}
+              {hasStorySections ? (
+                <div className="grid gap-6 lg:grid-cols-3">
+                  {project.problem && (
+                    <section className="rounded-[2rem] border border-slate-200 bg-white/85 p-6 dark:border-slate-800 dark:bg-slate-900/70">
+                      <p className="text-sm font-semibold uppercase tracking-[0.25em] text-cyan-700 dark:text-cyan-300">
+                        Challenge
+                      </p>
+                      <p className="mt-4 leading-7 text-slate-600 dark:text-slate-400">
+                        {project.problem}
+                      </p>
+                    </section>
+                  )}
 
-                {project.solution && (
-                  <section className="rounded-[2rem] border border-slate-200 bg-white/85 p-6 dark:border-slate-800 dark:bg-slate-900/70">
-                    <p className="text-sm font-semibold uppercase tracking-[0.25em] text-cyan-700 dark:text-cyan-300">
-                      Solution
-                    </p>
-                    <p className="mt-4 leading-7 text-slate-600 dark:text-slate-400">
-                      {project.solution}
-                    </p>
-                  </section>
-                )}
+                  {project.solution && (
+                    <section className="rounded-[2rem] border border-slate-200 bg-white/85 p-6 dark:border-slate-800 dark:bg-slate-900/70">
+                      <p className="text-sm font-semibold uppercase tracking-[0.25em] text-cyan-700 dark:text-cyan-300">
+                        Approach
+                      </p>
+                      <p className="mt-4 leading-7 text-slate-600 dark:text-slate-400">
+                        {project.solution}
+                      </p>
+                    </section>
+                  )}
 
-                {project.outcome && (
-                  <section className="rounded-[2rem] border border-slate-200 bg-white/85 p-6 dark:border-slate-800 dark:bg-slate-900/70">
-                    <p className="text-sm font-semibold uppercase tracking-[0.25em] text-cyan-700 dark:text-cyan-300">
-                      Outcome
-                    </p>
-                    <p className="mt-4 leading-7 text-slate-600 dark:text-slate-400">
-                      {project.outcome}
-                    </p>
-                  </section>
-                )}
-              </div>
+                  {project.outcome && (
+                    <section className="rounded-[2rem] border border-slate-200 bg-white/85 p-6 dark:border-slate-800 dark:bg-slate-900/70">
+                      <p className="text-sm font-semibold uppercase tracking-[0.25em] text-cyan-700 dark:text-cyan-300">
+                        Outcome
+                      </p>
+                      <p className="mt-4 leading-7 text-slate-600 dark:text-slate-400">
+                        {project.outcome}
+                      </p>
+                    </section>
+                  )}
+                </div>
+              ) : (
+                <section className="rounded-[2rem] border border-slate-200 bg-white/85 p-6 dark:border-slate-800 dark:bg-slate-900/70">
+                  <p className="text-sm font-semibold uppercase tracking-[0.25em] text-cyan-700 dark:text-cyan-300">
+                    Project overview
+                  </p>
+                  <p className="mt-4 max-w-4xl leading-8 text-slate-600 dark:text-slate-400">
+                    {project.description}
+                  </p>
+                </section>
+              )}
             </div>
           </div>
         </article>
