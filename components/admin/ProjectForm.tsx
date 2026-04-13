@@ -3,6 +3,7 @@
 import type { ChangeEvent } from 'react';
 import { useEffect, useMemo, useRef, useState, useTransition } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ArrowLeft, ImageUp, LoaderCircle, Save, Sparkles, Trash2 } from 'lucide-react';
@@ -50,6 +51,7 @@ export default function ProjectForm({
   const [selectedImageFile, setSelectedImageFile] = useState<File | null>(null);
   const [selectedImagePreviewUrl, setSelectedImagePreviewUrl] = useState<string | null>(null);
   const imageInputRef = useRef<HTMLInputElement | null>(null);
+  const selectedImagePreviewUrlRef = useRef<string | null>(null);
   const isEditMode = mode === 'edit';
   const [isSlugLocked, setIsSlugLocked] = useState(!isEditMode);
   const [hasMarkedImageForRemoval, setHasMarkedImageForRemoval] = useState(false);
@@ -99,16 +101,6 @@ export default function ProjectForm({
   }, [project, setValue]);
 
   useEffect(() => {
-    setSelectedImageFile(null);
-    setSelectedImagePreviewUrl(null);
-    setImageError(null);
-    setHasMarkedImageForRemoval(false);
-    if (imageInputRef.current) {
-      imageInputRef.current.value = '';
-    }
-  }, [project?.id, isEditMode]);
-
-  useEffect(() => {
     if (isSlugLocked) {
       setValue('slug', generatedSlug, {
         shouldValidate: generatedSlug.length > 0,
@@ -118,43 +110,56 @@ export default function ProjectForm({
   }, [generatedSlug, isSlugLocked, setValue]);
 
   useEffect(() => {
-    if (!selectedImageFile) {
-      setSelectedImagePreviewUrl(null);
-      return;
+    return () => {
+      if (selectedImagePreviewUrlRef.current) {
+        URL.revokeObjectURL(selectedImagePreviewUrlRef.current);
+      }
+    };
+  }, []);
+
+  const clearSelectedImageState = () => {
+    if (selectedImagePreviewUrlRef.current) {
+      URL.revokeObjectURL(selectedImagePreviewUrlRef.current);
+      selectedImagePreviewUrlRef.current = null;
     }
 
-    const objectUrl = URL.createObjectURL(selectedImageFile);
-    setSelectedImagePreviewUrl(objectUrl);
+    setSelectedImageFile(null);
+    setSelectedImagePreviewUrl(null);
 
-    return () => {
-      URL.revokeObjectURL(objectUrl);
-    };
-  }, [selectedImageFile]);
+    if (imageInputRef.current) {
+      imageInputRef.current.value = '';
+    }
+  };
 
   const handleImageFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const nextFile = event.target.files?.[0] ?? null;
     setImageError(null);
 
     if (!nextFile) {
-      setSelectedImageFile(null);
+      clearSelectedImageState();
       return;
     }
 
     if (!nextFile.type.startsWith('image/')) {
       event.target.value = '';
-      setSelectedImageFile(null);
+      clearSelectedImageState();
       setImageError('Please choose a valid image file.');
       return;
     }
 
     if (nextFile.size > maxImageUploadSizeBytes) {
       event.target.value = '';
-      setSelectedImageFile(null);
+      clearSelectedImageState();
       setImageError('Please choose an image smaller than 5 MB.');
       return;
     }
 
+    clearSelectedImageState();
+
+    const objectUrl = URL.createObjectURL(nextFile);
+    selectedImagePreviewUrlRef.current = objectUrl;
     setSelectedImageFile(nextFile);
+    setSelectedImagePreviewUrl(objectUrl);
     setHasMarkedImageForRemoval(false);
     setValue('remove_image', false, { shouldDirty: true });
   };
@@ -371,11 +376,8 @@ export default function ProjectForm({
                     <button
                       type="button"
                       onClick={() => {
-                        setSelectedImageFile(null);
+                        clearSelectedImageState();
                         setImageError(null);
-                        if (imageInputRef.current) {
-                          imageInputRef.current.value = '';
-                        }
                       }}
                       className="font-medium text-cyan-300 transition-colors hover:text-cyan-200"
                     >
@@ -410,11 +412,16 @@ export default function ProjectForm({
 
                 {previewImageUrl ? (
                   <div className="overflow-hidden rounded-3xl border border-slate-800 bg-slate-900/70">
-                    <img
-                      src={previewImageUrl}
-                      alt="Project preview"
-                      className="h-56 w-full object-cover"
-                    />
+                    <div className="relative h-56 w-full">
+                      <Image
+                        src={previewImageUrl}
+                        alt="Project preview"
+                        fill
+                        unoptimized
+                        sizes="(min-width: 1024px) 40vw, 100vw"
+                        className="object-cover"
+                      />
+                    </div>
                   </div>
                 ) : (
                   <div className="rounded-3xl border border-dashed border-slate-700 bg-slate-900/40 px-5 py-8 text-center text-sm text-slate-500">
