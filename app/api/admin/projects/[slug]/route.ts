@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { ZodError } from 'zod';
-import { proxyAdminJsonRequest } from '@/lib/admin-api';
+import { proxyAdminFormDataRequest, proxyAdminJsonRequest } from '@/lib/admin-api';
 import { adminProjectSlugSchema, adminProjectUpdateSchema } from '@/lib/admin-projects';
 
 type RouteContext = {
@@ -63,6 +63,34 @@ export async function PATCH(request: Request, context: RouteContext) {
     return NextResponse.json(
       {
         message: 'Unable to update the project right now.',
+      },
+      { status: 500 }
+    );
+  }
+}
+
+export async function POST(request: Request, context: RouteContext) {
+  try {
+    const slug = await getValidatedSlug(context);
+    const formData = await request.formData();
+
+    if (!formData.has('_method')) {
+      formData.set('_method', 'PATCH');
+    }
+
+    return proxyAdminFormDataRequest({
+      path: `/api/v1/admin/projects/${encodeURIComponent(slug)}`,
+      method: 'POST',
+      formData,
+    });
+  } catch (error) {
+    if (error instanceof ZodError) {
+      return createValidationErrorResponse(error);
+    }
+
+    return NextResponse.json(
+      {
+        message: 'Unable to upload the project image right now.',
       },
       { status: 500 }
     );

@@ -21,7 +21,7 @@ export default function Experience() {
           {experienceData.map((exp) => (
             <article
               key={exp.id}
-              className="glass-effect rounded-[2rem] p-6 md:p-8 transition-all duration-300 hover:border-cyan-500/40"
+              className="glass-effect panel-hover rounded-[2rem] p-6 md:p-8 transition-all duration-300 hover:border-cyan-500/40"
             >
               <div className="flex flex-col gap-6 md:flex-row md:justify-between">
                 <div className="space-y-4">
@@ -50,7 +50,7 @@ export default function Experience() {
                 </div>
 
                 <div className="md:min-w-[13rem]">
-                  <div className="rounded-2xl border border-slate-200 bg-white/90 p-4 dark:border-slate-800 dark:bg-slate-950/60">
+                  <div className="panel-hover rounded-2xl border border-slate-200 bg-white/90 p-4 dark:border-slate-800 dark:bg-slate-950/60">
                     <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
                       <Calendar size={16} />
                       <span>

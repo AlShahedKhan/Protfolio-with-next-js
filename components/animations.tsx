@@ -1,6 +1,6 @@
 'use client';
 
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useEffect, useRef, useState } from 'react';
 
 interface FadeInProps {
   children: ReactNode;
@@ -172,4 +172,56 @@ interface PulseProps {
 
 export function Pulse({ children }: PulseProps) {
   return <div className="animate-pulse">{children}</div>;
+}
+
+interface RevealOnScrollProps {
+  children: ReactNode;
+  delay?: number;
+  className?: string;
+}
+
+export function RevealOnScroll({
+  children,
+  delay = 0,
+  className = '',
+}: RevealOnScrollProps) {
+  const [isVisible, setIsVisible] = useState(false);
+  const containerRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const node = containerRef.current;
+
+    if (!node) {
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+
+        if (entry?.isIntersecting) {
+          setIsVisible(true);
+          observer.disconnect();
+        }
+      },
+      {
+        threshold: 0.16,
+        rootMargin: '0px 0px -10% 0px',
+      }
+    );
+
+    observer.observe(node);
+
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <div
+      ref={containerRef}
+      className={`reveal-section ${isVisible ? 'is-visible' : ''} ${className}`.trim()}
+      style={{ '--reveal-delay': `${delay}ms` } as React.CSSProperties}
+    >
+      {children}
+    </div>
+  );
 }

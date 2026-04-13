@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { ZodError } from 'zod';
-import { proxyAdminJsonRequest } from '@/lib/admin-api';
+import { proxyAdminFormDataRequest, proxyAdminJsonRequest } from '@/lib/admin-api';
 import { adminProjectCreateSchema } from '@/lib/admin-projects';
 
 const createValidationErrorResponse = (error: ZodError) =>
@@ -20,6 +20,18 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
+    const contentType = request.headers.get('content-type') ?? '';
+
+    if (contentType.includes('multipart/form-data')) {
+      const formData = await request.formData();
+
+      return proxyAdminFormDataRequest({
+        path: '/api/v1/admin/projects',
+        method: 'POST',
+        formData,
+      });
+    }
+
     const payload = adminProjectCreateSchema.parse(await request.json());
 
     return proxyAdminJsonRequest({

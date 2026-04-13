@@ -187,6 +187,98 @@
       background-position: 1000px 0;
     }
   }
+
+  @keyframes heroOrbDrift {
+    0%, 100% {
+      transform: translate3d(0, 0, 0) scale(1);
+    }
+    50% {
+      transform: translate3d(0, -18px, 0) scale(1.05);
+    }
+  }
+
+  @keyframes heroOrbGlide {
+    0%, 100% {
+      transform: translate3d(0, 0, 0) scale(1);
+    }
+    50% {
+      transform: translate3d(-20px, 16px, 0) scale(1.08);
+    }
+  }
+
+  @keyframes heroBeamSweep {
+    0% {
+      transform: translateX(-16%) scaleX(0.86);
+      opacity: 0.18;
+    }
+    50% {
+      transform: translateX(14%) scaleX(1);
+      opacity: 0.6;
+    }
+    100% {
+      transform: translateX(-16%) scaleX(0.86);
+      opacity: 0.18;
+    }
+  }
+
+  @keyframes heroStarDrift {
+    0%, 100% {
+      transform: translate3d(0, 0, 0) scale(0.9);
+      opacity: 0.22;
+    }
+    50% {
+      transform: translate3d(12px, -14px, 0) scale(1.18);
+      opacity: 0.9;
+    }
+  }
+
+  @keyframes heroEnter {
+    from {
+      opacity: 0;
+      transform: translate3d(0, 24px, 0);
+    }
+    to {
+      opacity: 1;
+      transform: translate3d(0, 0, 0);
+    }
+  }
+
+  @keyframes heroCardFloat {
+    0%, 100% {
+      transform: translate3d(0, 0, 0) rotate(0deg);
+    }
+    50% {
+      transform: translate3d(0, -14px, 0) rotate(-0.8deg);
+    }
+  }
+
+  @keyframes heroAuraPulse {
+    0%, 100% {
+      transform: translate3d(0, 0, 0) scale(0.96);
+      opacity: 0.34;
+    }
+    50% {
+      transform: translate3d(18px, -12px, 0) scale(1.12);
+      opacity: 0.78;
+    }
+  }
+
+  @keyframes heroStreakRun {
+    0% {
+      transform: translate3d(-12vw, 0, 0) rotate(-18deg);
+      opacity: 0;
+    }
+    10% {
+      opacity: 0.95;
+    }
+    42% {
+      opacity: 0;
+    }
+    100% {
+      transform: translate3d(112vw, -10vh, 0) rotate(-18deg);
+      opacity: 0;
+    }
+  }
 }
 
 @layer components {
@@ -298,5 +390,139 @@
 
   .hover-glow {
     @apply transition-all duration-300 hover:shadow-lg hover:shadow-cyan-500/50;
+  }
+
+  .hero-orb {
+    will-change: transform;
+    animation: heroOrbDrift 16s ease-in-out infinite;
+  }
+
+  .hero-orb-alt {
+    animation-name: heroOrbGlide;
+    animation-duration: 20s;
+  }
+
+  .hero-beam {
+    will-change: transform, opacity;
+    animation: heroBeamSweep 12s ease-in-out infinite;
+  }
+
+  .hero-star {
+    position: absolute;
+    border-radius: 9999px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(103, 232, 249, 0.8));
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.15),
+      0 0 20px rgba(56, 189, 248, 0.52);
+    will-change: transform, opacity;
+    animation: heroStarDrift 14s ease-in-out infinite;
+  }
+
+  .hero-enter {
+    opacity: 0;
+    will-change: transform, opacity;
+    animation: heroEnter 720ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    animation-delay: var(--motion-delay, 0ms);
+  }
+
+  .panel-hover {
+    transition:
+      transform 420ms cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 420ms cubic-bezier(0.22, 1, 0.36, 1),
+      border-color 420ms cubic-bezier(0.22, 1, 0.36, 1),
+      background-color 420ms cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: transform;
+  }
+
+  .panel-hover:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 24px 64px rgba(14, 165, 233, 0.14);
+  }
+
+  .hero-card-float {
+    animation: heroCardFloat 9s ease-in-out infinite;
+  }
+
+  .hero-title-aura {
+    animation: heroAuraPulse 11s ease-in-out infinite;
+    will-change: transform, opacity;
+  }
+
+  .hero-streak {
+    position: absolute;
+    height: 2px;
+    border-radius: 9999px;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(125, 211, 252, 0.95), rgba(255, 255, 255, 0));
+    box-shadow:
+      0 0 18px rgba(56, 189, 248, 0.42),
+      0 0 32px rgba(34, 211, 238, 0.2);
+    will-change: transform, opacity;
+    animation: heroStreakRun 8.5s linear infinite;
+    opacity: 0;
+  }
+
+  .reveal-section {
+    opacity: 0;
+    transform: translate3d(0, 42px, 0) scale(0.985);
+    transition:
+      transform 900ms cubic-bezier(0.22, 1, 0.36, 1),
+      opacity 900ms cubic-bezier(0.22, 1, 0.36, 1),
+      filter 900ms cubic-bezier(0.22, 1, 0.36, 1);
+    transition-delay: var(--reveal-delay, 0ms);
+    filter: blur(8px);
+    will-change: transform, opacity, filter;
+  }
+
+  .reveal-section.is-visible {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+    filter: blur(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .animate-float,
+  .animate-glow,
+  .animate-slide-up,
+  .animate-slide-down,
+  .animate-fade-in,
+  .animate-scale-in,
+  .animate-shimmer,
+  .hero-orb,
+  .hero-beam,
+  .hero-star,
+  .hero-enter {
+    animation: none !important;
+  }
+
+  .hero-enter {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .hero-card-float,
+  .hero-title-aura,
+  .hero-streak {
+    animation: none !important;
+  }
+
+  .reveal-section,
+  .reveal-section.is-visible {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    transition: none !important;
+  }
+
+  .panel-hover {
+    transition-duration: 120ms;
+  }
+
+  .panel-hover:hover {
+    transform: none;
   }
 }

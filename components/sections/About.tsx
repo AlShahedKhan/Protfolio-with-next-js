@@ -45,7 +45,7 @@ export default function About() {
               </p>
             </div>
 
-            <div className="rounded-3xl border border-slate-200 bg-white/80 p-6 dark:border-slate-800 dark:bg-slate-950/60">
+            <div className="panel-hover rounded-3xl border border-slate-200 bg-white/80 p-6 dark:border-slate-800 dark:bg-slate-950/60">
               <p className="text-sm font-semibold uppercase tracking-[0.25em] text-slate-400">Core Stack</p>
               <div className="mt-4 flex flex-wrap gap-3">
                 {coreStack.map((item) => (
@@ -79,7 +79,7 @@ export default function About() {
               return (
                 <div
                   key={strength.title}
-                  className="glass-effect rounded-3xl p-6 transition-all duration-300 hover:border-cyan-500/40"
+                  className="glass-effect panel-hover rounded-3xl p-6 transition-all duration-300 hover:border-cyan-500/40"
                 >
                   <div className="mb-4 inline-flex rounded-2xl border border-cyan-500/20 bg-cyan-500/10 p-3">
                     <Icon className="h-6 w-6 text-cyan-700 dark:text-cyan-300" />

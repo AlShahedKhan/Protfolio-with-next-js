@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { getLaravelApiBaseUrl } from '@/lib/laravel-api';
 
 const emptyStringToNull = (value: unknown) => {
   if (typeof value !== 'string') {
@@ -58,7 +59,6 @@ export const adminProjectCreateSchema = z.object({
     .trim()
     .min(20, 'Description should be at least 20 characters.')
     .max(5000),
-  image_url: nullableUrlString,
   technologies: z
     .array(z.string().trim().min(1).max(100))
     .min(1, 'Add at least one technology.')
@@ -80,6 +80,9 @@ export type AdminProjectCreateInput = z.infer<typeof adminProjectCreateSchema>;
 
 export const adminProjectUpdateSchema = adminProjectCreateSchema
   .partial()
+  .extend({
+    remove_image: z.boolean().optional(),
+  })
   .refine((value) => Object.keys(value).length > 0, {
     message: 'Provide at least one field to update.',
   });
@@ -99,7 +102,6 @@ export const adminProjectFormSchema = z.object({
     .trim()
     .min(20, 'Description should be at least 20 characters.')
     .max(5000),
-  image_url: z.string().trim().max(2048).optional().default(''),
   technologiesText: z.string().trim().min(1, 'Add at least one technology.'),
   live_url: z.string().trim().max(2048).optional().default(''),
   github_url: z.string().trim().max(2048).optional().default(''),
@@ -112,6 +114,7 @@ export const adminProjectFormSchema = z.object({
   solution: z.string().trim().max(3000).optional().default(''),
   outcome: z.string().trim().max(3000).optional().default(''),
   confidential: z.boolean(),
+  remove_image: z.boolean().optional().default(false),
 });
 
 export type AdminProjectFormInput = z.infer<typeof adminProjectFormSchema>;
@@ -120,7 +123,6 @@ export const defaultAdminProjectFormValues: AdminProjectFormInput = {
   title: '',
   slug: '',
   description: '',
-  image_url: '',
   technologiesText: '',
   live_url: '',
   github_url: '',
@@ -133,13 +135,13 @@ export const defaultAdminProjectFormValues: AdminProjectFormInput = {
   solution: '',
   outcome: '',
   confidential: false,
+  remove_image: false,
 };
 
 export const getAdminProjectFormValues = (project: AdminProject): AdminProjectFormInput => ({
   title: project.title,
   slug: project.slug,
   description: project.description,
-  image_url: project.image_url ?? '',
   technologiesText: project.technologies.join(', '),
   live_url: project.live_url ?? '',
   github_url: project.github_url ?? '',
@@ -152,6 +154,7 @@ export const getAdminProjectFormValues = (project: AdminProject): AdminProjectFo
   solution: project.solution ?? '',
   outcome: project.outcome ?? '',
   confidential: project.confidential,
+  remove_image: false,
 });
 
 export const splitTechnologies = (value: string) =>
@@ -181,7 +184,6 @@ export const buildAdminProjectPayload = (
     title: values.title,
     slug: values.slug,
     description: values.description,
-    image_url: values.image_url,
     technologies: splitTechnologies(values.technologiesText),
     live_url: values.live_url,
     github_url: values.github_url,
@@ -195,6 +197,73 @@ export const buildAdminProjectPayload = (
     outcome: values.outcome,
     confidential: values.confidential,
   });
+};
+
+export const buildAdminProjectUpdatePayload = (
+  values: AdminProjectFormInput,
+  options: { removeImage?: boolean } = {}
+): AdminProjectUpdateInput =>
+  adminProjectUpdateSchema.parse({
+    ...buildAdminProjectPayload(values),
+    ...(options.removeImage ? { remove_image: true } : {}),
+  });
+
+export const buildAdminProjectFormData = (
+  values: AdminProjectFormInput,
+  options: {
+    imageFile?: File | null;
+    methodOverride?: 'PATCH';
+  } = {}
+) => {
+  const payload = buildAdminProjectPayload(values);
+  const formData = new FormData();
+
+  if (options.methodOverride) {
+    formData.set('_method', options.methodOverride);
+  }
+
+  formData.set('title', payload.title);
+  formData.set('slug', payload.slug);
+  formData.set('description', payload.description);
+  payload.technologies.forEach((technology) => {
+    formData.append('technologies[]', technology);
+  });
+  formData.set('featured', payload.featured ? '1' : '0');
+  formData.set('published', payload.published ? '1' : '0');
+  formData.set('confidential', payload.confidential ? '1' : '0');
+  formData.set('live_url', payload.live_url ?? '');
+  formData.set('github_url', payload.github_url ?? '');
+  formData.set('sort_order', payload.sort_order !== null ? String(payload.sort_order) : '');
+  formData.set('role', payload.role ?? '');
+  formData.set('client_region', payload.client_region ?? '');
+  formData.set('problem', payload.problem ?? '');
+  formData.set('solution', payload.solution ?? '');
+  formData.set('outcome', payload.outcome ?? '');
+
+  if (options.imageFile) {
+    formData.set('image', options.imageFile);
+  }
+
+  return formData;
+};
+
+export const resolveAdminProjectImageUrl = (imageUrl?: string | null) => {
+  if (!imageUrl) {
+    return null;
+  }
+
+  const raw = imageUrl.trim();
+
+  if (!raw || raw.includes('example.com')) {
+    return null;
+  }
+
+  if (raw.startsWith('http://') || raw.startsWith('https://')) {
+    return raw;
+  }
+
+  const normalizedPath = raw.startsWith('/') ? raw : `/${raw}`;
+  return `${getLaravelApiBaseUrl()}${normalizedPath}`;
 };
 
 export const extractAdminProjects = (payload: unknown): AdminProject[] => {

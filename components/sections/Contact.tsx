@@ -68,7 +68,7 @@ export default function Contact() {
                     href={action.href}
                     target={isExternal ? '_blank' : undefined}
                     rel={isExternal ? 'noopener noreferrer' : undefined}
-                    className="inline-flex items-center justify-center gap-2 rounded-full border border-slate-200 bg-white/80 px-5 py-3 font-medium text-slate-900 transition-all duration-300 hover:border-cyan-500/40 hover:bg-cyan-500/10 dark:border-slate-700 dark:bg-slate-900/70 dark:text-white"
+                    className="panel-hover inline-flex items-center justify-center gap-2 rounded-full border border-slate-200 bg-white/80 px-5 py-3 font-medium text-slate-900 transition-all duration-300 hover:border-cyan-500/40 hover:bg-cyan-500/10 dark:border-slate-700 dark:bg-slate-900/70 dark:text-white"
                   >
                     <Icon size={18} />
                     {action.label}
@@ -78,7 +78,7 @@ export default function Contact() {
               })}
             </div>
 
-            <div className="rounded-3xl border border-slate-200 bg-white/80 p-6 dark:border-slate-800 dark:bg-slate-900/60">
+            <div className="panel-hover rounded-3xl border border-slate-200 bg-white/80 p-6 dark:border-slate-800 dark:bg-slate-900/60">
               <p className="text-sm font-semibold uppercase tracking-[0.25em] text-slate-400">Best fit projects</p>
               <div className="mt-4 flex flex-wrap gap-3">
                 {['Laravel backends', 'AI platforms', 'Education systems', 'Payment integrations', 'Internal tools'].map((item) => (
@@ -93,7 +93,7 @@ export default function Contact() {
             </div>
           </div>
 
-          <div className="glass-effect rounded-[2rem] p-8">
+          <div className="glass-effect panel-hover rounded-[2rem] p-8">
             <div className="space-y-6">
               <div>
                 <p className="text-sm font-semibold uppercase tracking-[0.25em] text-cyan-700 dark:text-cyan-300">Reach out directly</p>
@@ -111,7 +111,7 @@ export default function Contact() {
                       href={item.href}
                       target={isExternal ? '_blank' : undefined}
                       rel={isExternal ? 'noopener noreferrer' : undefined}
-                      className="flex items-start gap-4 rounded-2xl border border-slate-200 bg-white/90 p-5 transition-all duration-300 hover:border-cyan-500/40 dark:border-slate-800 dark:bg-slate-950/60"
+                      className="panel-hover flex items-start gap-4 rounded-2xl border border-slate-200 bg-white/90 p-5 transition-all duration-300 hover:border-cyan-500/40 dark:border-slate-800 dark:bg-slate-950/60"
                     >
                       <div className="rounded-2xl border border-cyan-500/20 bg-cyan-500/10 p-3">
                         <Icon className="h-5 w-5 text-cyan-700 dark:text-cyan-300" />
@@ -125,7 +125,7 @@ export default function Contact() {
                 })}
               </div>
 
-              <div className="rounded-2xl border border-slate-200 bg-white/90 p-5 text-sm text-slate-600 dark:border-slate-800 dark:bg-slate-950/60 dark:text-slate-400">
+              <div className="panel-hover rounded-2xl border border-slate-200 bg-white/90 p-5 text-sm text-slate-600 dark:border-slate-800 dark:bg-slate-950/60 dark:text-slate-400">
                 Prefer email for project inquiries. I&apos;m comfortable working with international clients and collaborating in English, Bengali, Hindi, and Urdu.
               </div>
             </div>

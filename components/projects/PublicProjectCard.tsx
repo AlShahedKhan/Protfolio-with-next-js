@@ -21,7 +21,7 @@ export default function PublicProjectCard({
   const showCodeLink = isRealProjectLink(project.github_url);
 
   return (
-    <article className="group overflow-hidden rounded-[2rem] border border-slate-200 bg-white/85 shadow-[0_30px_80px_rgba(148,163,184,0.16)] transition-all duration-300 hover:-translate-y-1 hover:border-cyan-500/40 dark:border-slate-800 dark:bg-slate-900/70 dark:shadow-[0_30px_80px_rgba(2,6,23,0.28)]">
+    <article className="panel-hover group overflow-hidden rounded-[2rem] border border-slate-200 bg-white/85 shadow-[0_30px_80px_rgba(148,163,184,0.16)] transition-all duration-300 hover:-translate-y-2 hover:border-cyan-500/40 dark:border-slate-800 dark:bg-slate-900/70 dark:shadow-[0_30px_80px_rgba(2,6,23,0.28)]">
       <div className="relative h-56 overflow-hidden">
         <Image
           src={project.imageSrc}
@@ -29,9 +29,10 @@ export default function PublicProjectCard({
           fill
           unoptimized
           sizes="(min-width: 1024px) 33vw, 100vw"
-          className="object-cover transition-transform duration-500 group-hover:scale-105"
+          className="object-cover transition-transform duration-700 group-hover:scale-110"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/10 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-cyan-500/18 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
 
         {showIndexBadge && (
           <div className="absolute left-5 top-5 rounded-full border border-cyan-400/20 bg-white/80 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-cyan-700 dark:bg-slate-950/75 dark:text-cyan-300">

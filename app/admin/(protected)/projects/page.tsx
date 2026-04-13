@@ -1,10 +1,15 @@
+import Image from 'next/image';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { Edit3, ExternalLink, Github, Plus, Sparkles } from 'lucide-react';
 import DeleteProjectButton from '@/components/admin/DeleteProjectButton';
 import { ADMIN_LOGIN_PATH } from '@/lib/admin-auth-constants';
 import { getAdminSession, getLaravelApiUrl } from '@/lib/admin-auth';
-import { extractAdminProjects, extractApiMessage } from '@/lib/admin-projects';
+import {
+  extractAdminProjects,
+  extractApiMessage,
+  resolveAdminProjectImageUrl,
+} from '@/lib/admin-projects';
 
 type ProjectsAdminPageProps = {
   searchParams: Promise<{
@@ -154,22 +159,41 @@ export default async function ProjectsAdmin({ searchParams }: ProjectsAdminPageP
                     className="border-b border-slate-800/80 align-top transition-colors duration-300 hover:bg-slate-800/40"
                   >
                     <td className="px-6 py-5">
-                      <div className="space-y-2">
-                        <div className="flex flex-wrap items-center gap-2">
-                          <p className="text-base font-semibold text-white">{project.title}</p>
-                          {project.featured && (
-                            <span className="inline-flex items-center gap-1 rounded-full border border-cyan-500/30 bg-cyan-500/10 px-3 py-1 text-xs font-semibold text-cyan-200">
-                              <Sparkles size={12} />
-                              Featured
-                            </span>
+                      <div className="flex gap-4">
+                        <div className="relative h-20 w-28 shrink-0 overflow-hidden rounded-2xl border border-slate-800 bg-slate-950/70">
+                          {resolveAdminProjectImageUrl(project.image_url) ? (
+                            <Image
+                              src={resolveAdminProjectImageUrl(project.image_url) ?? ''}
+                              alt={project.title}
+                              fill
+                              unoptimized
+                              sizes="112px"
+                              className="object-cover"
+                            />
+                          ) : (
+                            <div className="flex h-full items-center justify-center text-xs font-medium uppercase tracking-[0.2em] text-slate-500">
+                              No image
+                            </div>
                           )}
                         </div>
-                        <p className="text-xs uppercase tracking-[0.22em] text-slate-500">
-                          {project.slug}
-                        </p>
-                        <p className="max-w-xl text-sm leading-6 text-slate-400">
-                          {project.description}
-                        </p>
+
+                        <div className="space-y-2">
+                          <div className="flex flex-wrap items-center gap-2">
+                            <p className="text-base font-semibold text-white">{project.title}</p>
+                            {project.featured && (
+                              <span className="inline-flex items-center gap-1 rounded-full border border-cyan-500/30 bg-cyan-500/10 px-3 py-1 text-xs font-semibold text-cyan-200">
+                                <Sparkles size={12} />
+                                Featured
+                              </span>
+                            )}
+                          </div>
+                          <p className="text-xs uppercase tracking-[0.22em] text-slate-500">
+                            {project.slug}
+                          </p>
+                          <p className="max-w-xl text-sm leading-6 text-slate-400">
+                            {project.description}
+                          </p>
+                        </div>
                       </div>
                     </td>
 
