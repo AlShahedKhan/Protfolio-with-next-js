@@ -1,7 +1,7 @@
 import 'server-only';
 
 import { z } from 'zod';
-import { fetchLaravelApi, getLaravelApiBaseUrl } from '@/lib/laravel-api';
+import { fetchLaravelApi, resolveLaravelAssetUrl } from '@/lib/laravel-api';
 
 export const PUBLIC_PROJECTS_PER_PAGE = 6;
 export const PUBLIC_PROJECTS_PATH = '/projects';
@@ -139,12 +139,7 @@ const resolveProjectImage = (project: z.infer<typeof publicProjectSchema>, index
     return fallbackProjectImages[index % fallbackProjectImages.length];
   }
 
-  if (raw.startsWith('http://') || raw.startsWith('https://')) {
-    return raw;
-  }
-
-  const normalizedPath = raw.startsWith('/') ? raw : `/${raw}`;
-  return `${getLaravelApiBaseUrl()}${normalizedPath}`;
+  return resolveLaravelAssetUrl(raw);
 };
 
 const toPublicProject = (

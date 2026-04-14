@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { getLaravelApiBaseUrl } from '@/lib/laravel-api';
+import { resolveLaravelAssetUrl } from '@/lib/laravel-api';
 
 const emptyStringToNull = (value: unknown) => {
   if (typeof value !== 'string') {
@@ -258,12 +258,7 @@ export const resolveAdminProjectImageUrl = (imageUrl?: string | null) => {
     return null;
   }
 
-  if (raw.startsWith('http://') || raw.startsWith('https://')) {
-    return raw;
-  }
-
-  const normalizedPath = raw.startsWith('/') ? raw : `/${raw}`;
-  return `${getLaravelApiBaseUrl()}${normalizedPath}`;
+  return resolveLaravelAssetUrl(raw);
 };
 
 export const extractAdminProjects = (payload: unknown): AdminProject[] => {

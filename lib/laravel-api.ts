@@ -23,6 +23,43 @@ export const getLaravelApiUrl = (path: string) => {
   return `${getLaravelApiBaseUrl()}${normalizedPath}`;
 };
 
+const isLocalAssetHost = (hostname: string) =>
+  hostname === 'localhost' ||
+  hostname === '127.0.0.1' ||
+  hostname === '::1' ||
+  hostname.endsWith('.test');
+
+export const resolveLaravelAssetUrl = (rawUrl: string) => {
+  const raw = rawUrl.trim();
+  if (!raw) {
+    return raw;
+  }
+
+  const baseUrl = getLaravelApiBaseUrl();
+  const normalizedPath = raw.startsWith('/') ? raw : `/${raw}`;
+
+  if (!raw.startsWith('http://') && !raw.startsWith('https://')) {
+    return `${baseUrl}${normalizedPath}`;
+  }
+
+  try {
+    const parsed = new URL(raw);
+    const apiBase = new URL(baseUrl);
+
+    if (isLocalAssetHost(parsed.hostname)) {
+      return `${apiBase.origin}${parsed.pathname}${parsed.search}${parsed.hash}`;
+    }
+
+    if (parsed.pathname.startsWith('/storage/') && parsed.origin !== apiBase.origin) {
+      return `${apiBase.origin}${parsed.pathname}${parsed.search}${parsed.hash}`;
+    }
+
+    return raw;
+  } catch {
+    return `${baseUrl}${normalizedPath}`;
+  }
+};
+
 type FetchLaravelApiResult = {
   response: Response | null;
   url: string | null;
