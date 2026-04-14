@@ -3,7 +3,7 @@ import 'server-only';
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 import { ADMIN_ACCESS_TOKEN_COOKIE, ADMIN_SESSION_COOKIE } from '@/lib/admin-auth-constants';
-import { getLaravelApiUrl } from '@/lib/laravel-api';
+import { fetchLaravelApi, getLaravelApiUrl } from '@/lib/laravel-api';
 
 export { getLaravelApiBaseUrl, getLaravelApiUrl } from '@/lib/laravel-api';
 
@@ -159,7 +159,7 @@ export const getVerifiedAdminSession = async (): Promise<AdminSession | null> =>
   }
 
   try {
-    const response = await fetch(getLaravelApiUrl('/api/v1/auth/me'), {
+    const { response } = await fetchLaravelApi('/api/v1/auth/me', {
       method: 'GET',
       headers: {
         Accept: 'application/json',
@@ -168,7 +168,7 @@ export const getVerifiedAdminSession = async (): Promise<AdminSession | null> =>
       cache: 'no-store',
     });
 
-    if (!response.ok) {
+    if (!response?.ok) {
       return null;
     }
 

@@ -3,8 +3,9 @@ import { notFound, redirect } from 'next/navigation';
 import { ArrowLeft } from 'lucide-react';
 import ProjectForm from '@/components/admin/ProjectForm';
 import { ADMIN_LOGIN_PATH } from '@/lib/admin-auth-constants';
-import { getAdminSession, getLaravelApiUrl } from '@/lib/admin-auth';
+import { getAdminSession } from '@/lib/admin-auth';
 import { adminProjectSlugSchema, extractAdminProject, extractApiMessage } from '@/lib/admin-projects';
+import { fetchLaravelApi } from '@/lib/laravel-api';
 
 type ProjectEditPageProps = {
   params: Promise<{
@@ -20,7 +21,7 @@ async function getProject(slug: string) {
   }
 
   try {
-    const response = await fetch(getLaravelApiUrl(`/api/v1/admin/projects/${encodeURIComponent(slug)}`), {
+    const { response } = await fetchLaravelApi(`/api/v1/admin/projects/${encodeURIComponent(slug)}`, {
       method: 'GET',
       headers: {
         Accept: 'application/json',
@@ -28,6 +29,14 @@ async function getProject(slug: string) {
       },
       cache: 'no-store',
     });
+
+    if (!response) {
+      return {
+        project: null,
+        error:
+          'Unable to reach the Laravel backend right now. Check that the admin API is running and reachable from the Next.js server.',
+      };
+    }
 
     const payload = (await response.json().catch(() => null)) as unknown;
 

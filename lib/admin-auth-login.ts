@@ -4,10 +4,10 @@ import { NextResponse } from 'next/server';
 import type { AdminLoginInput } from '@/lib/admin-auth-schema';
 import {
   clearAdminAuthCookies,
-  getLaravelApiUrl,
   LaravelAdminLoginResponse,
   setAdminAuthCookies,
 } from '@/lib/admin-auth';
+import { fetchLaravelApi, getLaravelApiUrl } from '@/lib/laravel-api';
 
 type BackendJson = Record<string, unknown> | null;
 
@@ -28,7 +28,7 @@ const parseBackendResponse = async (response: Response): Promise<BackendJson> =>
 export async function createAdminLoginResponse(payload: AdminLoginInput) {
   const loginUrl = getLaravelApiUrl('/api/v1/auth/login');
 
-  const backendResponse = await fetch(loginUrl, {
+  const { response: backendResponse } = await fetchLaravelApi('/api/v1/auth/login', {
     method: 'POST',
     headers: {
       Accept: 'application/json',
@@ -37,6 +37,18 @@ export async function createAdminLoginResponse(payload: AdminLoginInput) {
     body: JSON.stringify(payload),
     cache: 'no-store',
   });
+
+  if (!backendResponse) {
+    const response = NextResponse.json(
+      {
+        message: `Unable to reach the authentication server. Make sure ${loginUrl} is reachable from the Next.js server.`,
+      },
+      { status: 502 }
+    );
+
+    clearAdminAuthCookies(response);
+    return response;
+  }
 
   const backendBody = await parseBackendResponse(backendResponse);
 

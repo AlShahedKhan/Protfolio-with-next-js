@@ -59,6 +59,10 @@ module.exports = {
           process.env.NEXT_PUBLIC_API_URL ||
           envFromLocal.NEXT_PUBLIC_API_URL ||
           'http://localhost:8000/api',
+        LARAVEL_API_FALLBACK_BASE_URL:
+          process.env.LARAVEL_API_FALLBACK_BASE_URL ||
+          envFromLocal.LARAVEL_API_FALLBACK_BASE_URL ||
+          '',
       },
     },
   ],

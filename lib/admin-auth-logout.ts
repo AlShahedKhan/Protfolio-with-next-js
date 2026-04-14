@@ -1,7 +1,8 @@
 import 'server-only';
 
 import { NextResponse } from 'next/server';
-import { clearAdminAuthCookies, getAdminSession, getLaravelApiUrl } from '@/lib/admin-auth';
+import { clearAdminAuthCookies, getAdminSession } from '@/lib/admin-auth';
+import { fetchLaravelApi } from '@/lib/laravel-api';
 
 export async function createAdminLogoutResponse() {
   const session = await getAdminSession();
@@ -9,7 +10,7 @@ export async function createAdminLogoutResponse() {
 
   if (session?.accessToken) {
     try {
-      const backendResponse = await fetch(getLaravelApiUrl('/api/v1/auth/logout'), {
+      const { response: backendResponse } = await fetchLaravelApi('/api/v1/auth/logout', {
         method: 'POST',
         headers: {
           Accept: 'application/json',
@@ -18,7 +19,7 @@ export async function createAdminLogoutResponse() {
         cache: 'no-store',
       });
 
-      backendLoggedOut = backendResponse.ok;
+      backendLoggedOut = backendResponse?.ok ?? false;
     } catch {
       backendLoggedOut = false;
     }

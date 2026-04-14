@@ -1,7 +1,8 @@
 import 'server-only';
 
 import { NextResponse } from 'next/server';
-import { clearAdminAuthCookies, getAdminSession, getLaravelApiUrl } from '@/lib/admin-auth';
+import { clearAdminAuthCookies, getAdminSession } from '@/lib/admin-auth';
+import { fetchLaravelApi, getLaravelApiUrl } from '@/lib/laravel-api';
 
 type JsonLike = Record<string, unknown> | unknown[] | null;
 
@@ -73,7 +74,17 @@ export async function proxyAdminJsonRequest({ path, method = 'GET', body }: Prox
       init.body = JSON.stringify(body);
     }
 
-    const upstream = await fetch(getLaravelApiUrl(path), init);
+    const { response: upstream } = await fetchLaravelApi(path, init);
+
+    if (!upstream) {
+      return NextResponse.json(
+        {
+          message: `Unable to reach the admin backend. Make sure ${getLaravelApiUrl(path)} is reachable from the Next.js server.`,
+        },
+        { status: 502 }
+      );
+    }
+
     const upstreamBody = await parseJsonResponse(upstream);
     const response = NextResponse.json(toResponseBody(upstreamBody), {
       status: upstream.status,
@@ -114,12 +125,22 @@ export async function proxyAdminFormDataRequest({
   }
 
   try {
-    const upstream = await fetch(getLaravelApiUrl(path), {
+    const { response: upstream } = await fetchLaravelApi(path, {
       method,
       headers: getAuthenticatedHeaders(session.accessToken),
       body: formData,
       cache: 'no-store',
     });
+
+    if (!upstream) {
+      return NextResponse.json(
+        {
+          message: `Unable to reach the admin backend. Make sure ${getLaravelApiUrl(path)} is reachable from the Next.js server.`,
+        },
+        { status: 502 }
+      );
+    }
+
 
     const upstreamBody = await parseJsonResponse(upstream);
     const response = NextResponse.json(toResponseBody(upstreamBody), {
