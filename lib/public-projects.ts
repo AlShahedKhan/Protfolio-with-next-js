@@ -1,7 +1,7 @@
 import 'server-only';
 
 import { z } from 'zod';
-import { getLaravelApiBaseUrl, getLaravelApiUrl } from '@/lib/laravel-api';
+import { getLaravelApiBaseUrl } from '@/lib/laravel-api';
 
 export const PUBLIC_PROJECTS_PER_PAGE = 6;
 export const PUBLIC_PROJECTS_PATH = '/projects';
@@ -129,6 +129,44 @@ const resolvePaginationPage = (url: string | null, page: number | null) => {
   }
 };
 
+const normalizeBaseUrl = (value: string) => {
+  const trimmed = value.trim().replace(/\/+$/, '');
+  return trimmed.endsWith('/api') ? trimmed.slice(0, -4) : trimmed;
+};
+
+const getCandidateBaseUrls = () => {
+  const fallback = process.env.LARAVEL_API_FALLBACK_BASE_URL?.trim() ?? '';
+  const baseUrls = [getLaravelApiBaseUrl(), fallback ? normalizeBaseUrl(fallback) : ''];
+
+  return [...new Set(baseUrls.filter(Boolean))];
+};
+
+const buildLaravelApiUrl = (baseUrl: string, path: string) => {
+  const normalizedPath = path.startsWith('/') ? path : `/${path}`;
+  return `${baseUrl}${normalizedPath}`;
+};
+
+const fetchFromLaravel = async (path: string, init: RequestInit) => {
+  let lastResponse: Response | null = null;
+
+  for (const baseUrl of getCandidateBaseUrls()) {
+    const url = buildLaravelApiUrl(baseUrl, path);
+
+    try {
+      const response = await fetch(url, init);
+      if (response.ok) {
+        return { response, url };
+      }
+
+      lastResponse = response;
+    } catch {
+      // Try the next configured backend base URL.
+    }
+  }
+
+  return { response: lastResponse, url: null as string | null };
+};
+
 export const getPublicProjectsPageHref = (page: number) =>
   page <= 1 ? PUBLIC_PROJECTS_PATH : `${PUBLIC_PROJECTS_PATH}?page=${page}`;
 
@@ -196,7 +234,8 @@ export async function getPublicProjectsPage({
       per_page: String(perPage),
     });
 
-    const response = await fetch(getLaravelApiUrl(`/api/v1/projects?${searchParams.toString()}`), {
+    const path = `/api/v1/projects?${searchParams.toString()}`;
+    const { response } = await fetchFromLaravel(path, {
       method: 'GET',
       headers: {
         Accept: 'application/json',
@@ -204,10 +243,12 @@ export async function getPublicProjectsPage({
       cache: 'no-store',
     });
 
-    if (!response.ok) {
+    if (!response?.ok) {
       return {
         projects: [] as PublicProject[],
-        error: 'Unable to load projects from the public Laravel endpoint right now.',
+        error: `Unable to load projects from the public Laravel endpoint right now${
+          response ? ` (HTTP ${response.status})` : ''
+        }.`,
       };
     }
 
@@ -258,7 +299,8 @@ export async function getFeaturedPublicProjects(limit = 3) {
 
 export async function getPublicProjectBySlug(slug: string) {
   try {
-    const response = await fetch(getLaravelApiUrl(`/api/v1/projects/${encodeURIComponent(slug)}`), {
+    const path = `/api/v1/projects/${encodeURIComponent(slug)}`;
+    const { response } = await fetchFromLaravel(path, {
       method: 'GET',
       headers: {
         Accept: 'application/json',
@@ -266,17 +308,19 @@ export async function getPublicProjectBySlug(slug: string) {
       cache: 'no-store',
     });
 
-    if (response.status === 404) {
+    if (response?.status === 404) {
       return {
         project: null,
         error: null,
       };
     }
 
-    if (!response.ok) {
+    if (!response?.ok) {
       return {
         project: null,
-        error: 'Unable to load this project from the public Laravel endpoint right now.',
+        error: `Unable to load this project from the public Laravel endpoint right now${
+          response ? ` (HTTP ${response.status})` : ''
+        }.`,
       };
     }
 
