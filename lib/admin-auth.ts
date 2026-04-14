@@ -38,7 +38,27 @@ type AdminSessionPayload = {
   user: AdminUser;
 };
 
+const parseBooleanEnv = (value: string | undefined) => {
+  if (!value) {
+    return null;
+  }
+
+  const normalized = value.trim().toLowerCase();
+
+  if (['1', 'true', 'yes', 'on'].includes(normalized)) {
+    return true;
+  }
+
+  if (['0', 'false', 'no', 'off'].includes(normalized)) {
+    return false;
+  }
+
+  return null;
+};
+
+const explicitSecureCookie = parseBooleanEnv(process.env.ADMIN_AUTH_COOKIE_SECURE);
 const isProduction = process.env.NODE_ENV === 'production';
+const useSecureCookies = explicitSecureCookie ?? isProduction;
 
 const isValidDate = (value: Date) => !Number.isNaN(value.getTime());
 
@@ -74,7 +94,7 @@ export const clearAdminAuthCookies = (response: NextResponse) => {
     value: '',
     httpOnly: true,
     sameSite: 'lax',
-    secure: isProduction,
+    secure: useSecureCookies,
     path: '/',
     expires: new Date(0),
   });
@@ -84,7 +104,7 @@ export const clearAdminAuthCookies = (response: NextResponse) => {
     value: '',
     httpOnly: true,
     sameSite: 'lax',
-    secure: isProduction,
+    secure: useSecureCookies,
     path: '/',
     expires: new Date(0),
   });
@@ -105,7 +125,7 @@ export const setAdminAuthCookies = (
     value: payload.access_token,
     httpOnly: true,
     sameSite: 'lax',
-    secure: isProduction,
+    secure: useSecureCookies,
     path: '/',
     ...(expires ? { expires } : {}),
   });
@@ -115,7 +135,7 @@ export const setAdminAuthCookies = (
     value: JSON.stringify(sessionPayload),
     httpOnly: true,
     sameSite: 'lax',
-    secure: isProduction,
+    secure: useSecureCookies,
     path: '/',
     ...(expires ? { expires } : {}),
   });
