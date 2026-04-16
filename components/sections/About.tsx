@@ -62,7 +62,7 @@ export default function About() {
                   {aboutData.highlights.slice(0, 3).map((item) => (
                     <span
                       key={item}
-                      className="rounded-full border border-cyan-500/20 bg-cyan-500/10 px-4 py-2 text-sm text-cyan-200"
+                      className="rounded-full border border-cyan-500/30 bg-cyan-500/10 px-4 py-2 text-sm text-cyan-800 dark:border-cyan-500/20 dark:text-cyan-200"
                     >
                       {item}
                     </span>
