@@ -13,7 +13,7 @@ export default function Experience() {
             <h2 className="section-title">Recent roles focused on product delivery and backend reliability.</h2>
           </div>
           <p className="max-w-xl text-slate-600 dark:text-slate-400">
-            The common thread across these roles is building software that teams can ship, support, and improve without unnecessary complexity.
+            Across each role, the focus has been secure API architecture, performance optimization, and dependable production delivery.
           </p>
         </div>
 

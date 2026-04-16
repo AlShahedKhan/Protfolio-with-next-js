@@ -49,12 +49,14 @@ export default function Skills() {
             {[
               'API Testing (Postman, Insomnia)',
               'Version Control (Git, GitHub)',
-              'Agile Methodology',
               'Code Review & Optimization',
-              'Testing (PHPUnit, Jest)',
+              'Secure API Design',
+              'Webhook Security',
+              'Stripe & PayPal Integration',
+              'Database Indexing',
+              'Agile Delivery',
               'CI/CD Pipelines',
-              'Cloud Deployment',
-              'Performance Optimization',
+              'Cloud Deployment (AWS, DigitalOcean)',
             ].map((skill) => (
               <div
                 key={skill}

@@ -7,21 +7,21 @@ const strengths = [
   {
     icon: Code2,
     title: 'Architecture that scales',
-    description: 'I build Laravel applications with clean structure so new features do not create long-term maintenance pain.',
+    description: 'I design Laravel systems with clear service boundaries and maintainable patterns for long-term product growth.',
   },
   {
     icon: Database,
     title: 'Backend performance thinking',
-    description: 'Database design, Redis caching, and API structure are handled with production reliability in mind.',
+    description: 'I improve real-world performance with Redis caching, query optimization, and robust API design.',
   },
   {
     icon: Globe,
-    title: 'Global delivery mindset',
-    description: 'I have shipped work for clients across multiple countries with a focus on communication, ownership, and dependable delivery.',
+    title: 'Security-first implementation',
+    description: 'JWT authentication, RBAC, and secure webhook handling are built into the architecture from day one.',
   },
 ];
 
-const coreStack = ['Laravel', 'PHP', 'MySQL', 'PostgreSQL', 'Redis', 'Docker', 'AWS', 'Stripe', 'PayPal', 'React', 'Vue.js', 'GitHub Actions'];
+const coreStack = ['Laravel 8-13', 'PHP', 'REST APIs', 'MySQL', 'PostgreSQL', 'Redis', 'Docker', 'CI/CD', 'AWS', 'Stripe', 'PayPal', 'OpenAI API'];
 
 export default function About() {
   return (
@@ -41,7 +41,7 @@ export default function About() {
                 {aboutData.description}
               </p>
               <p>
-                My background covers AI chatbot platforms, online education systems, SaaS workflows, real-time communication features, and internal business applications. I care about business outcomes as much as the code itself.
+                My background includes AI platforms, online education systems, fintech payment flows, and internal business systems. I focus on backend architecture that stays secure, fast, and maintainable in production.
               </p>
             </div>
 

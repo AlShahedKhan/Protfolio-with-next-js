@@ -1,4 +1,4 @@
-import { ArrowRight, Github, Linkedin, Mail, MapPin, Phone } from 'lucide-react';
+import { ArrowRight, BriefcaseBusiness, Github, Linkedin, Mail, MapPin, Phone } from 'lucide-react';
 import { getPortfolioOwner } from '@/lib/content';
 
 const portfolioOwner = getPortfolioOwner();
@@ -41,6 +41,16 @@ const primaryActions = [
     label: 'View GitHub',
     href: portfolioOwner.github,
   },
+  {
+    icon: BriefcaseBusiness,
+    label: 'Hire on Upwork',
+    href: portfolioOwner.upwork,
+  },
+  {
+    icon: BriefcaseBusiness,
+    label: 'Hire on Fiverr',
+    href: portfolioOwner.fiverr,
+  },
 ].filter((item) => Boolean(item.href));
 
 export default function Contact() {
@@ -53,7 +63,7 @@ export default function Contact() {
               <span className="text-sm font-semibold uppercase tracking-[0.3em] text-cyan-700 dark:text-cyan-300">Contact</span>
               <h2 className="section-title">If the work needs to be clean, useful, and maintainable, let&apos;s talk.</h2>
               <p className="max-w-2xl text-lg leading-8 text-slate-700 dark:text-slate-300">
-                If you have a Laravel product, admin system, AI platform, university workflow, or payment-heavy application in mind, send a message directly. I usually reply within a few hours.
+                If you need Laravel backend architecture, secure API development, optimization work, or payment integration support, send a message directly. I usually reply within a few hours.
               </p>
             </div>
 
@@ -81,7 +91,7 @@ export default function Contact() {
             <div className="panel-hover rounded-3xl border border-slate-200 bg-white/80 p-6 dark:border-slate-800 dark:bg-slate-900/60">
               <p className="text-sm font-semibold uppercase tracking-[0.25em] text-slate-400">Best fit projects</p>
               <div className="mt-4 flex flex-wrap gap-3">
-                {['Laravel backends', 'AI platforms', 'Education systems', 'Payment integrations', 'Internal tools'].map((item) => (
+                {['Secure Laravel APIs', 'AI platforms', 'Education systems', 'Payment integrations', 'Backend optimization'].map((item) => (
                   <span
                     key={item}
                     className="rounded-full border border-slate-200 bg-slate-100 px-4 py-2 text-sm text-slate-800 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-200"
@@ -126,7 +136,7 @@ export default function Contact() {
               </div>
 
               <div className="panel-hover rounded-2xl border border-slate-200 bg-white/90 p-5 text-sm text-slate-600 dark:border-slate-800 dark:bg-slate-950/60 dark:text-slate-400">
-                Prefer email for project inquiries. I&apos;m comfortable working with international clients and collaborating in English, Bengali, Hindi, and Urdu.
+                Prefer email for project inquiries. I&apos;m comfortable collaborating with product teams and stakeholders in English and Bengali.
               </div>
             </div>
           </div>

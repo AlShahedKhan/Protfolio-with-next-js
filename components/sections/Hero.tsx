@@ -7,14 +7,14 @@ const portfolioOwner = getPortfolioOwner();
 
 const proofItems = [
   { value: `${portfolioOwner.yearsExperience}+ Years`, label: 'Professional Laravel work' },
-  { value: 'Global Clients', label: 'USA, UK, Japan, UAE, Australia' },
-  { value: 'API to Deploy', label: 'Backend ownership across delivery' },
+  { value: '30%+ Gains', label: 'Performance improvements delivered' },
+  { value: '$1M+ / Month', label: 'Payment workflows supported' },
 ];
 
 const focusAreas = [
-  'Scalable Laravel APIs for SaaS and enterprise products',
-  'AI, education, fintech, and workflow-heavy platforms',
-  'Redis, payments, deployment, and clean delivery ownership',
+  'Scalable Laravel APIs with JWT authentication and RBAC',
+  'Performance-focused backend systems with Redis and query tuning',
+  'AI, education, and payment-heavy platform delivery',
 ];
 
 const heroStars = [
@@ -118,9 +118,8 @@ export default function Hero() {
               </div>
 
               <p className="max-w-2xl text-lg leading-8 text-slate-700 md:text-xl dark:text-slate-300">
-                I help startups and growing teams ship secure Laravel backends,
-                production-ready APIs, payment workflows, and full-stack features that stay
-                fast, maintainable, and reliable under real use.
+                I build secure, scalable Laravel backends and production-ready APIs with a strong
+                focus on performance, clean architecture, and dependable delivery.
               </p>
             </div>
 
@@ -209,8 +208,8 @@ export default function Hero() {
                   {portfolioOwner.location}
                 </p>
                 <p className="mt-3 text-sm text-slate-600 dark:text-slate-400">
-                  Best fit for teams that need a senior Laravel engineer who can code, ship,
-                  optimize, and communicate clearly with clients and product teams.
+                  Best fit for teams that need a senior Laravel engineer for API architecture,
+                  optimization, and production-grade backend delivery.
                 </p>
               </div>
             </div>
