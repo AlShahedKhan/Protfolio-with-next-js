@@ -8,7 +8,7 @@ const portfolioOwner = getPortfolioOwner();
 const proofItems = [
   { value: `${portfolioOwner.yearsExperience}+ Years`, label: 'Professional Laravel work' },
   { value: '30%+ Gains', label: 'Performance improvements delivered' },
-  { value: '$1M+ / Month', label: 'Payment workflows supported' },
+  { value: '80+ Repositories', label: 'On GitHub' },
 ];
 
 const focusAreas = [
